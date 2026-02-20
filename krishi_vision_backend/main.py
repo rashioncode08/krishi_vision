@@ -14,7 +14,7 @@ from PIL import Image
 
 from disease_db import DISEASE_DATABASE, get_disease_info
 from database import init_db, save_scan, get_recent_scans, get_disease_stats
-from ai_model import predict_disease as ai_predict, is_model_available
+from ai_model import predict_disease as ai_predict, is_model_available, is_hf_api_available
 
 # ---------------------------------------------------------------------------
 # App Setup
@@ -91,7 +91,7 @@ def preprocess_image(image_bytes: bytes) -> dict:
 # falls back to mock prediction otherwise.
 # ---------------------------------------------------------------------------
 
-USE_REAL_MODEL = is_model_available()
+USE_REAL_MODEL = is_model_available() or is_hf_api_available()
 
 
 def mock_predict(image_bytes: bytes) -> dict:
@@ -171,16 +171,13 @@ async def predict_disease(file: UploadFile = File(...)):
     # Preprocess the image
     image_info = preprocess_image(image_bytes)
 
-    # Run prediction — real AI model with mock fallback
+    # Run prediction — AI model (local or HF API) with mock fallback
     model_type = "mock"
     try:
-        if USE_REAL_MODEL:
-            prediction = ai_predict(image_bytes)
-            model_type = "ai"
-        else:
-            prediction = mock_predict(image_bytes)
+        prediction = ai_predict(image_bytes)
+        model_type = "ai"
     except Exception as e:
-        print(f"⚠️ AI model failed, falling back to mock: {e}")
+        print(f"⚠️ AI inference failed, falling back to mock: {e}")
         prediction = mock_predict(image_bytes)
 
     # Fetch disease details
