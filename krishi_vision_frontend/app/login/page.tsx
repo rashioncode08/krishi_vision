@@ -76,18 +76,18 @@ export default function Login() {
     };
 
     return (
-        <div style={{ minHeight: "100vh", background: "linear-gradient(180deg, #f0fdf4 0%, #ffffff 50%, #f8faf9 100%)", display: "flex", flexDirection: "column" }}>
+        <div style={{ minHeight: "100vh", background: "linear-gradient(180deg, #dcfce7 0%, #f0fdf4 50%, #ffffff 100%)", display: "flex", flexDirection: "column" }}>
             <Header hideLogin />
 
-            <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 24px" }}>
+            <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "80px 16px 40px" }}>
                 <div className="animate-fade-in-up" style={{
                     width: "100%",
                     maxWidth: 440,
                     background: "white",
-                    borderRadius: 24,
-                    boxShadow: "0 12px 40px rgba(22, 163, 74, 0.08)",
-                    border: "1px solid #dcfce7",
-                    padding: "48px 40px",
+                    borderRadius: 20,
+                    boxShadow: "0 12px 40px rgba(21, 128, 61, 0.12)",
+                    border: "1px solid #bbf7d0",
+                    padding: "36px 24px",
                     position: "relative",
                     overflow: "hidden"
                 }}>

@@ -10,6 +10,7 @@ export default function Header({ hideLogin }: { hideLogin?: boolean }) {
     const [mounted, setMounted] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userName, setUserName] = useState("");
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         setMounted(true);
@@ -74,7 +75,17 @@ export default function Header({ hideLogin }: { hideLogin?: boolean }) {
                 </div>
             </Link>
 
-            <nav style={{ display: "flex", alignItems: "center", gap: "28px" }}>
+            {/* Mobile Hamburger Icon */}
+            <button
+                className="md:hidden flex items-center justify-center p-2 rounded-lg"
+                style={{ color: "#15803d", display: "none" }}
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+                {isMobileMenuOpen ? "✖" : "☰"}
+            </button>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex" style={{ display: "flex", alignItems: "center", gap: "28px" }}>
                 {!isLoggedIn ? (
                     <>
                         <a href="/#how-it-works" style={{ color: "#374a3f", textDecoration: "none", fontSize: "0.85rem", fontWeight: 500 }}>How It Works</a>
@@ -91,7 +102,7 @@ export default function Header({ hideLogin }: { hideLogin?: boolean }) {
                     <>
                         {isLoggedIn ? (
                             <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                                <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "#16a34a" }}>
+                                <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "#15803d" }}>
                                     👋🏼 Namaste, {userName.split(" ")[0]}
                                 </span>
                                 <button
@@ -117,8 +128,8 @@ export default function Header({ hideLogin }: { hideLogin?: boolean }) {
                                     padding: "9px 22px",
                                     fontSize: "0.82rem",
                                     fontWeight: 600,
-                                    color: "#16a34a",
-                                    border: "2px solid #16a34a",
+                                    color: "#15803d",
+                                    border: "2px solid #15803d",
                                     borderRadius: 50,
                                     textDecoration: "none",
                                     transition: "all 0.3s ease",
@@ -140,6 +151,70 @@ export default function Header({ hideLogin }: { hideLogin?: boolean }) {
                     </Link>
                 )}
             </nav>
+
+            {/* Mobile Navigation Dropdown */}
+            {isMobileMenuOpen && (
+                <div style={{
+                    position: "absolute",
+                    top: "100%",
+                    left: 0,
+                    right: 0,
+                    background: "white",
+                    borderBottom: "1px solid #e2e8e5",
+                    padding: "16px 24px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "16px",
+                    boxShadow: "0 10px 20px rgba(0,0,0,0.05)"
+                }}>
+                    {!isLoggedIn ? (
+                        <a href="/#how-it-works" onClick={() => setIsMobileMenuOpen(false)} style={{ color: "#374a3f", textDecoration: "none", fontSize: "1rem", fontWeight: 600, padding: "8px 0", borderBottom: "1px solid #f0fdf4" }}>How It Works</a>
+                    ) : (
+                        <>
+                            <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)} style={{ color: "#374a3f", textDecoration: "none", fontSize: "1rem", fontWeight: 600, padding: "8px 0", borderBottom: "1px solid #f0fdf4" }}>Dashboard</Link>
+                            <a href="/dashboard#weather" onClick={() => setIsMobileMenuOpen(false)} style={{ color: "#374a3f", textDecoration: "none", fontSize: "1rem", fontWeight: 600, padding: "8px 0", borderBottom: "1px solid #f0fdf4" }}>Weather</a>
+                            <a href="/dashboard#scan-history" onClick={() => setIsMobileMenuOpen(false)} style={{ color: "#374a3f", textDecoration: "none", fontSize: "1rem", fontWeight: 600, padding: "8px 0", borderBottom: "1px solid #f0fdf4" }}>History</a>
+                        </>
+                    )}
+
+                    {!hideLogin && mounted && (
+                        <>
+                            {isLoggedIn ? (
+                                <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: "8px 0" }}>
+                                    <span style={{ fontSize: "0.95rem", fontWeight: 600, color: "#15803d" }}>
+                                        👋🏼 Namaste, {userName.split(" ")[0]}
+                                    </span>
+                                    <button
+                                        onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}
+                                        style={{ padding: "10px", fontSize: "0.85rem", fontWeight: 700, color: "#ef4444", background: "#fef2f2", border: "1px solid #fee2e2", borderRadius: 8, cursor: "pointer", width: "100%" }}
+                                    >
+                                        Logout
+                                    </button>
+                                </div>
+                            ) : (
+                                <Link
+                                    href="/login"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    style={{ padding: "12px", fontSize: "0.95rem", fontWeight: 700, color: "#15803d", background: "#f0fdf4", borderRadius: 8, textAlign: "center", textDecoration: "none" }}
+                                >
+                                    🔑 Login
+                                </Link>
+                            )}
+                        </>
+                    )}
+
+                    {mounted && isLoggedIn && (
+                        <Link
+                            href="/dashboard#upload-section"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="btn-primary"
+                            style={{ width: "100%", justifyContent: "center", padding: "14px", fontSize: "1rem" }}
+                        >
+                            🔬 Scan Leaf
+                        </Link>
+                    )}
+                </div>
+            )}
         </header>
     );
 }

@@ -19,8 +19,8 @@ export default function LandingPage() {
           alignItems: "center",
           justifyContent: "center",
           textAlign: "center",
-          padding: "120px 24px 80px",
-          background: "linear-gradient(180deg, #f0fdf4 0%, #ffffff 50%, #f8faf9 100%)",
+          padding: "100px 16px 60px",
+          background: "linear-gradient(180deg, #dcfce7 0%, #f0fdf4 40%, #ffffff 100%)",
           position: "relative",
           overflow: "hidden",
         }}
@@ -121,21 +121,23 @@ export default function LandingPage() {
             {/* Floating stats badge */}
             <div style={{
               position: "absolute",
-              bottom: -20,
-              right: 20,
+              bottom: "5%",
+              right: "5%",
               background: "white",
-              padding: "16px 24px",
+              padding: "12px 20px",
               borderRadius: 16,
-              boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+              boxShadow: "0 10px 30px rgba(22,163,74,0.15)",
               display: "flex",
               alignItems: "center",
-              gap: 16,
-              border: "1px solid #f0fdf4"
+              gap: 12,
+              border: "1px solid #bbf7d0",
+              transform: "scale(0.9)",
+              transformOrigin: "bottom right"
             }} className="animate-fade-in delay-500">
-              <div style={{ fontSize: "2rem", background: "#f0fdf4", width: 48, height: 48, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}>🔬</div>
+              <div style={{ fontSize: "1.5rem", background: "#f0fdf4", width: 40, height: 40, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}>🔬</div>
               <div style={{ textAlign: "left" }}>
-                <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "#16a34a", lineHeight: 1.2 }}>95%+</div>
-                <div style={{ fontSize: "0.8rem", color: "#6b8077", fontWeight: 600 }}>Diagnosis Accuracy</div>
+                <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#15803d", lineHeight: 1.2 }}>95%+</div>
+                <div style={{ fontSize: "0.75rem", color: "#166534", fontWeight: 600 }}>Diagnosis Accuracy</div>
               </div>
             </div>
           </div>

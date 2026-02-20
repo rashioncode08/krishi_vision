@@ -5,6 +5,7 @@ Crop disease detection API with image upload and AI prediction.
 
 import hashlib
 import random
+import os
 from io import BytesIO
 from contextlib import asynccontextmanager
 

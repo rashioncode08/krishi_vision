@@ -6,17 +6,19 @@
 @import "tailwindcss";
 
 :root {
-  /* Core palette — bright greens */
+  /* Core palette — deep premium greens */
   --kv-green-50: #f0fdf4;
   --kv-green-100: #dcfce7;
   --kv-green-200: #bbf7d0;
   --kv-green-300: #86efac;
   --kv-green-400: #4ade80;
   --kv-green-500: #22c55e;
-  --kv-green-600: #16a34a;
-  --kv-green-700: #15803d;
-  --kv-green-800: #166534;
-  --kv-green-900: #14532d;
+  --kv-green-600: #15803d;
+  /* Deeper primary green */
+  --kv-green-700: #166534;
+  /* Darker accent */
+  --kv-green-800: #14532d;
+  --kv-green-900: #052e16;
 
   /* Earth / accent */
   --kv-earth-100: #fef9c3;
@@ -77,6 +79,14 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
+}
+
+/* Base mobile typography adjustments */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+    /* Scale down rem values on mobile */
+  }
 }
 
 /* ============================================================
