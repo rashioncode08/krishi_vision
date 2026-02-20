@@ -7,6 +7,7 @@ import ImageUpload from "./components/ImageUpload";
 import LoadingAnalysis from "./components/LoadingAnalysis";
 import ResultsCard from "./components/ResultsCard";
 import ScanHistory from "./components/ScanHistory";
+import WeatherDashboard from "./components/WeatherDashboard";
 import { HeroIllustration, LeafScanSVG } from "./components/Illustrations";
 
 const RAW_API_URL =
@@ -262,6 +263,10 @@ export default function Home() {
           </div>
         )}
       </section>
+
+      <div className="section-divider" />
+
+      <WeatherDashboard />
 
       <div className="section-divider" />
 

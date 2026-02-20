@@ -57,6 +57,7 @@ export default function Header() {
                 {[
                     { href: "#how-it-works", label: "How It Works" },
                     { href: "#upload-section", label: "Diagnose" },
+                    { href: "#weather", label: "Weather" },
                     { href: "#scan-history", label: "Dashboard" },
                 ].map((link) => (
                     <a
