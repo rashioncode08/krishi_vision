@@ -23,8 +23,9 @@ export default function LoadingAnalysis({ preview }: LoadingAnalysisProps) {
                     aspectRatio: "1",
                     maxWidth: 320,
                     margin: "0 auto 32px",
-                    background: "var(--bg-card)",
-                    border: "1px solid var(--border-accent)",
+                    background: "white",
+                    border: "2px solid #22c55e",
+                    borderRadius: 16,
                     overflow: "hidden",
                     position: "relative",
                 }}
@@ -37,7 +38,7 @@ export default function LoadingAnalysis({ preview }: LoadingAnalysisProps) {
                         width: "100%",
                         height: "100%",
                         objectFit: "cover",
-                        filter: "brightness(0.7) contrast(1.1)",
+                        filter: "brightness(0.9) contrast(1.05)",
                     }}
                 />
                 {/* Overlay grid */}

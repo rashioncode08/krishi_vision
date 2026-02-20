@@ -1,12 +1,12 @@
-@import "tailwindcss";
-
 /* ============================================================
-   KrishiVision Design System
-   Premium earthy-green dark theme for agriculture
+   KrishiVision Design System — Bright Theme
+   Premium light green agricultural theme
    ============================================================ */
 
+@import "tailwindcss";
+
 :root {
-  /* Core palette */
+  /* Core palette — bright greens */
   --kv-green-50: #f0fdf4;
   --kv-green-100: #dcfce7;
   --kv-green-200: #bbf7d0;
@@ -18,54 +18,51 @@
   --kv-green-800: #166534;
   --kv-green-900: #14532d;
 
-  --kv-earth-50: #fefce8;
+  /* Earth / accent */
   --kv-earth-100: #fef9c3;
-  --kv-earth-200: #fef08a;
   --kv-earth-300: #fde047;
   --kv-earth-400: #facc15;
   --kv-earth-500: #eab308;
 
-  /* Background layers */
-  --bg-primary: #050d09;
-  --bg-secondary: #0a1a10;
-  --bg-card: rgba(15, 35, 22, 0.6);
-  --bg-card-hover: rgba(20, 45, 28, 0.8);
-  --bg-glass: rgba(15, 35, 22, 0.4);
+  /* Surfaces — bright/light */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8faf9;
+  --bg-card: #ffffff;
+  --bg-glass: rgba(255, 255, 255, 0.8);
+  --bg-hero: linear-gradient(180deg, #f0fdf4 0%, #ffffff 60%);
 
   /* Text */
-  --text-primary: #f0fdf4;
-  --text-secondary: #86efac;
-  --text-muted: rgba(134, 239, 172, 0.6);
-  --text-accent: #4ade80;
+  --text-primary: #0f1a14;
+  --text-secondary: #374a3f;
+  --text-muted: #6b8077;
+  --text-accent: #16a34a;
 
   /* Borders */
-  --border-subtle: rgba(74, 222, 128, 0.12);
-  --border-accent: rgba(74, 222, 128, 0.3);
+  --border-default: #e2e8e5;
+  --border-subtle: rgba(22, 163, 74, 0.12);
+  --border-hover: rgba(22, 163, 74, 0.3);
 
   /* Shadows */
-  --glow-green: 0 0 40px rgba(34, 197, 94, 0.15);
-  --glow-green-strong: 0 0 60px rgba(34, 197, 94, 0.25);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --shadow-green: 0 4px 20px rgba(34, 197, 94, 0.15);
 
-  /* Spacing */
+  /* Radius */
   --radius-sm: 8px;
   --radius-md: 12px;
-  --radius-lg: 16px;
+  --radius-lg: 18px;
   --radius-xl: 24px;
   --radius-full: 9999px;
 }
 
-@theme inline {
-  --color-background: var(--bg-primary);
-  --color-foreground: var(--text-primary);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
 /* ============================================================
-   Base Styles
+   Base
    ============================================================ */
 
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -74,135 +71,30 @@ html {
 }
 
 body {
-  background: var(--bg-primary);
+  font-family: var(--font-geist-sans), "Inter", -apple-system, system-ui, sans-serif;
+  background: var(--bg-secondary);
   color: var(--text-primary);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  overflow-x: hidden;
-}
-
-/* Subtle grid pattern */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image:
-    radial-gradient(circle at 25% 25%, rgba(34, 197, 94, 0.03) 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, rgba(74, 222, 128, 0.02) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 0;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
 }
 
 /* ============================================================
-   Animations
-   ============================================================ */
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(34, 197, 94, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(34, 197, 94, 0.4);
-  }
-}
-
-@keyframes scan-line {
-  0% { top: 0; }
-  100% { top: 100%; }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-@keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes progress-fill {
-  from { width: 0%; }
-  to { width: var(--target-width); }
-}
-
-@keyframes slide-in-right {
-  from {
-    opacity: 0;
-    transform: translateX(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-.animate-fade-in-up {
-  animation: fadeInUp 0.7s ease-out forwards;
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-out forwards;
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-
-.animate-slide-in {
-  animation: slide-in-right 0.5s ease-out forwards;
-}
-
-/* Staggered delays */
-.delay-100 { animation-delay: 100ms; }
-.delay-200 { animation-delay: 200ms; }
-.delay-300 { animation-delay: 300ms; }
-.delay-400 { animation-delay: 400ms; }
-.delay-500 { animation-delay: 500ms; }
-.delay-600 { animation-delay: 600ms; }
-.delay-700 { animation-delay: 700ms; }
-
-/* ============================================================
-   Glass Card
+   Glass Card — Light
    ============================================================ */
 
 .glass-card {
-  background: var(--bg-glass);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
   transition: all 0.3s ease;
 }
 
 .glass-card:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--border-accent);
-  box-shadow: var(--glow-green);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
 }
 
 /* ============================================================
@@ -212,52 +104,46 @@ body::before {
 .btn-primary {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
-  padding: 14px 32px;
-  background: linear-gradient(135deg, var(--kv-green-600), var(--kv-green-500));
+  padding: 14px 30px;
+  background: linear-gradient(135deg, var(--kv-green-500), var(--kv-green-600));
   color: white;
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: 700;
+  font-size: 0.95rem;
   border: none;
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: all 0.3s ease;
   text-decoration: none;
-  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-green);
 }
 
 .btn-primary:hover {
+  background: linear-gradient(135deg, var(--kv-green-600), var(--kv-green-700));
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
-  background: linear-gradient(135deg, var(--kv-green-500), var(--kv-green-400));
-}
-
-.btn-primary:active {
-  transform: translateY(0);
+  box-shadow: 0 6px 24px rgba(34, 197, 94, 0.25);
 }
 
 .btn-secondary {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
-  padding: 14px 32px;
+  padding: 14px 30px;
   background: transparent;
-  color: var(--kv-green-400);
+  color: var(--kv-green-600);
   font-weight: 600;
-  font-size: 1rem;
-  border: 1px solid var(--border-accent);
-  border-radius: var(--radius-full);
+  font-size: 0.95rem;
+  border: 2px solid var(--kv-green-200);
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: all 0.3s ease;
   text-decoration: none;
+  transition: all 0.3s ease;
 }
 
 .btn-secondary:hover {
-  background: rgba(74, 222, 128, 0.1);
+  background: var(--kv-green-50);
   border-color: var(--kv-green-400);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 /* ============================================================
@@ -265,26 +151,18 @@ body::before {
    ============================================================ */
 
 .upload-zone {
-  position: relative;
-  border: 2px dashed var(--border-accent);
+  border: 2px dashed var(--kv-green-200);
   border-radius: var(--radius-xl);
-  padding: 48px 32px;
-  text-align: center;
-  cursor: pointer;
+  background: var(--kv-green-50);
   transition: all 0.3s ease;
-  background: rgba(15, 35, 22, 0.3);
-  overflow: hidden;
+  cursor: pointer;
 }
 
 .upload-zone:hover,
 .upload-zone.drag-over {
   border-color: var(--kv-green-400);
-  background: rgba(34, 197, 94, 0.08);
-  box-shadow: var(--glow-green);
-}
-
-.upload-zone.drag-over {
-  transform: scale(1.02);
+  background: var(--kv-green-100);
+  box-shadow: var(--shadow-green);
 }
 
 /* ============================================================
@@ -293,43 +171,123 @@ body::before {
 
 .confidence-bar-track {
   width: 100%;
-  height: 12px;
-  background: rgba(74, 222, 128, 0.1);
+  height: 8px;
+  background: var(--kv-green-100);
   border-radius: var(--radius-full);
   overflow: hidden;
 }
 
 .confidence-bar-fill {
   height: 100%;
+  background: linear-gradient(90deg, var(--kv-green-400), var(--kv-green-600));
   border-radius: var(--radius-full);
-  background: linear-gradient(90deg, var(--kv-green-600), var(--kv-green-400), var(--kv-earth-400));
-  animation: progress-fill 1.5s ease-out forwards;
-  position: relative;
-}
-
-.confidence-bar-fill::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
-  background-size: 200% 100%;
-  animation: shimmer 2s ease-in-out infinite;
+  width: 0%;
+  animation: bar-fill 1.5s ease forwards;
 }
 
 /* ============================================================
-   Scan Animation
+   Section Divider
    ============================================================ */
 
-.scan-container {
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--radius-lg);
+.section-divider {
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--kv-green-300), var(--kv-green-500));
+  margin: 0 auto;
+  border-radius: var(--radius-full);
 }
+
+/* ============================================================
+   Animations
+   ============================================================ */
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bar-fill {
+  to {
+    width: var(--target-width, 85%);
+  }
+}
+
+@keyframes scan-line {
+  0% {
+    top: 0;
+  }
+
+  100% {
+    top: 100%;
+  }
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 6px rgba(34, 197, 94, 0.4);
+  }
+
+  50% {
+    opacity: 0.6;
+    box-shadow: 0 0 12px rgba(34, 197, 94, 0.6);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.7s ease both;
+}
+
+.animate-fade-in {
+  animation: fade-in-up 0.5s ease both;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.delay-200 {
+  animation-delay: 0.2s;
+}
+
+.delay-400 {
+  animation-delay: 0.4s;
+}
+
+.delay-500 {
+  animation-delay: 0.5s;
+}
+
+/* ============================================================
+   Scan Line (for loading)
+   ============================================================ */
 
 .scan-line {
   position: absolute;
@@ -337,31 +295,13 @@ body::before {
   right: 0;
   height: 3px;
   background: linear-gradient(90deg, transparent, var(--kv-green-400), transparent);
-  box-shadow: 0 0 15px var(--kv-green-400);
+  box-shadow: 0 0 12px var(--kv-green-400);
   animation: scan-line 2s linear infinite;
   z-index: 10;
 }
 
 /* ============================================================
-   Eco Badge
-   ============================================================ */
-
-.eco-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 10px;
-  background: rgba(34, 197, 94, 0.15);
-  border: 1px solid rgba(34, 197, 94, 0.3);
-  border-radius: var(--radius-full);
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--kv-green-400);
-  letter-spacing: 0.02em;
-}
-
-/* ============================================================
-   Scrollbar
+   Scrollbar — Light
    ============================================================ */
 
 ::-webkit-scrollbar {
@@ -373,21 +313,10 @@ body::before {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(74, 222, 128, 0.3);
-  border-radius: 3px;
+  background: var(--kv-green-200);
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(74, 222, 128, 0.5);
-}
-
-/* ============================================================
-   Section helpers
-   ============================================================ */
-
-.section-divider {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--border-accent), transparent);
-  margin: 0 auto;
-  max-width: 600px;
+  background: var(--kv-green-400);
 }

@@ -7,6 +7,7 @@ import ImageUpload from "./components/ImageUpload";
 import LoadingAnalysis from "./components/LoadingAnalysis";
 import ResultsCard from "./components/ResultsCard";
 import ScanHistory from "./components/ScanHistory";
+import { HeroIllustration, LeafScanSVG } from "./components/Illustrations";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -41,10 +42,7 @@ export default function Home() {
       }
 
       const data = await res.json();
-
-      // Simulate a minimum 2-second analysis time for UX
       await new Promise((r) => setTimeout(r, 2000));
-
       setResult(data);
       setState("results");
     } catch (err) {
@@ -61,7 +59,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
+    <div style={{ minHeight: "100vh", background: "var(--bg-secondary)" }}>
       <Header />
 
       {/* ========== Hero Section ========== */}
@@ -74,31 +72,21 @@ export default function Home() {
           justifyContent: "center",
           textAlign: "center",
           padding: "120px 24px 80px",
+          background: "linear-gradient(180deg, #f0fdf4 0%, #ffffff 50%, #f8faf9 100%)",
           position: "relative",
+          overflow: "hidden",
         }}
       >
-        {/* Gradient orbs */}
+        {/* Background decoration */}
         <div
           style={{
             position: "absolute",
-            width: 500,
-            height: 500,
+            width: 600,
+            height: 600,
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(34,197,94,0.08) 0%, transparent 70%)",
-            top: "10%",
-            left: "-10%",
-            pointerEvents: "none",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            width: 400,
-            height: 400,
-            borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(74,222,128,0.06) 0%, transparent 70%)",
-            bottom: "10%",
-            right: "-5%",
+            background: "radial-gradient(circle, rgba(34,197,94,0.06) 0%, transparent 70%)",
+            top: "-10%",
+            right: "-10%",
             pointerEvents: "none",
           }}
         />
@@ -111,12 +99,12 @@ export default function Home() {
               alignItems: "center",
               gap: 8,
               padding: "8px 20px",
-              background: "rgba(34, 197, 94, 0.1)",
-              border: "1px solid rgba(34, 197, 94, 0.2)",
+              background: "#f0fdf4",
+              border: "1px solid #dcfce7",
               borderRadius: "9999px",
               fontSize: "0.8rem",
               fontWeight: 600,
-              color: "var(--kv-green-400)",
+              color: "#16a34a",
               marginBottom: 28,
             }}
           >
@@ -131,28 +119,20 @@ export default function Home() {
               lineHeight: 1.1,
               letterSpacing: "-0.03em",
               marginBottom: 20,
+              color: "#0f1a14",
             }}
           >
-            <span style={{ color: "var(--text-primary)" }}>Scan a Leaf.</span>
+            Scan a Leaf.
             <br />
-            <span
-              style={{
-                background: "linear-gradient(135deg, var(--kv-green-400), var(--kv-earth-400))",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
-              Save a Crop.
-            </span>
+            <span style={{ color: "#16a34a" }}>Save a Crop.</span>
           </h1>
 
-          {/* Subtitle */}
           <p
             style={{
-              fontSize: "clamp(1rem, 2.5vw, 1.2rem)",
+              fontSize: "clamp(1rem, 2.5vw, 1.15rem)",
               lineHeight: 1.7,
-              color: "var(--text-muted)",
-              maxWidth: 550,
+              color: "#6b8077",
+              maxWidth: 500,
               margin: "0 auto 36px",
             }}
           >
@@ -160,33 +140,23 @@ export default function Home() {
             with treatment advice — in under a minute.
           </p>
 
-          {/* CTA */}
           <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
-            <a
-              href="#upload-section"
-              className="btn-primary"
-              style={{ fontSize: "1.05rem", padding: "16px 36px" }}
-            >
+            <a href="#upload-section" className="btn-primary" style={{ fontSize: "1.05rem", padding: "16px 36px" }}>
               🔍 Start Scanning
             </a>
-            <a
-              href="#how-it-works"
-              className="btn-secondary"
-              style={{ fontSize: "1.05rem", padding: "16px 36px" }}
-            >
+            <a href="#how-it-works" className="btn-secondary" style={{ fontSize: "1.05rem", padding: "16px 36px" }}>
               Learn More
             </a>
           </div>
 
-          {/* Stats row */}
+          {/* Hero Illustration */}
+          <div style={{ marginTop: 48, display: "flex", justifyContent: "center" }}>
+            <HeroIllustration />
+          </div>
+
+          {/* Stats */}
           <div
-            style={{
-              display: "flex",
-              gap: 40,
-              justifyContent: "center",
-              marginTop: 56,
-              flexWrap: "wrap",
-            }}
+            style={{ display: "flex", gap: 48, justifyContent: "center", marginTop: 40, flexWrap: "wrap" }}
             className="animate-fade-in delay-500"
           >
             {[
@@ -195,24 +165,10 @@ export default function Home() {
               { value: "95%+", label: "Accuracy" },
             ].map((stat) => (
               <div key={stat.label} style={{ textAlign: "center" }}>
-                <div
-                  style={{
-                    fontSize: "1.8rem",
-                    fontWeight: 800,
-                    color: "var(--kv-green-400)",
-                    lineHeight: 1,
-                  }}
-                >
+                <div style={{ fontSize: "2rem", fontWeight: 800, color: "#16a34a", lineHeight: 1 }}>
                   {stat.value}
                 </div>
-                <div
-                  style={{
-                    fontSize: "0.8rem",
-                    color: "var(--text-muted)",
-                    marginTop: 6,
-                    fontWeight: 500,
-                  }}
-                >
+                <div style={{ fontSize: "0.8rem", color: "#6b8077", marginTop: 6, fontWeight: 500 }}>
                   {stat.label}
                 </div>
               </div>
@@ -221,16 +177,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ========== Divider ========== */}
       <div className="section-divider" />
 
-      {/* ========== How It Works ========== */}
       <HowItWorks />
 
-      {/* ========== Divider ========== */}
       <div className="section-divider" />
 
-      {/* ========== Upload / Analysis Section ========== */}
+      {/* ========== Upload Section ========== */}
       <section
         id="upload-section"
         style={{
@@ -240,13 +193,16 @@ export default function Home() {
         }}
       >
         <div style={{ textAlign: "center", marginBottom: 48 }} className="animate-fade-in-up">
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+            <LeafScanSVG />
+          </div>
           <p
             style={{
-              fontSize: "0.85rem",
-              fontWeight: 600,
-              color: "var(--kv-green-400)",
+              fontSize: "0.8rem",
+              fontWeight: 700,
+              color: "#22c55e",
               textTransform: "uppercase",
-              letterSpacing: "0.15em",
+              letterSpacing: "0.2em",
               marginBottom: 12,
             }}
           >
@@ -256,79 +212,63 @@ export default function Home() {
             style={{
               fontSize: "clamp(1.8rem, 4vw, 2.5rem)",
               fontWeight: 800,
+              color: "#0f1a14",
               lineHeight: 1.2,
-              color: "var(--text-primary)",
             }}
           >
             Upload Your Leaf Photo
           </h2>
         </div>
 
-        {/* State-driven content */}
-        {state === "idle" && (
-          <ImageUpload onImageSelected={handleImageSelected} />
-        )}
-
-        {state === "analyzing" && (
-          <LoadingAnalysis preview={preview} />
-        )}
-
+        {state === "idle" && <ImageUpload onImageSelected={handleImageSelected} />}
+        {state === "analyzing" && <LoadingAnalysis preview={preview} />}
         {state === "results" && result && (
-          <ResultsCard result={result} preview={preview} onReset={handleReset} />
+          <div className="animate-fade-in">
+            <ResultsCard result={result} />
+            <div style={{ textAlign: "center", marginTop: 32 }}>
+              <button onClick={handleReset} className="btn-primary" style={{ padding: "14px 32px" }}>
+                📸 Scan Another Leaf
+              </button>
+            </div>
+          </div>
         )}
-
         {state === "error" && (
           <div className="animate-fade-in" style={{ textAlign: "center" }}>
             <div
-              className="glass-card"
               style={{
                 maxWidth: 500,
                 margin: "0 auto",
                 padding: "32px",
-                borderColor: "rgba(239, 68, 68, 0.3)",
+                background: "white",
+                border: "1px solid #fecaca",
+                borderRadius: 18,
+                boxShadow: "0 4px 16px rgba(239,68,68,0.08)",
               }}
             >
               <div style={{ fontSize: "2.5rem", marginBottom: 16 }}>⚠️</div>
-              <h3
-                style={{
-                  fontSize: "1.2rem",
-                  fontWeight: 700,
-                  color: "var(--text-primary)",
-                  marginBottom: 8,
-                }}
-              >
+              <h3 style={{ fontSize: "1.2rem", fontWeight: 700, color: "#0f1a14", marginBottom: 8 }}>
                 Analysis Failed
               </h3>
-              <p
-                style={{
-                  fontSize: "0.9rem",
-                  color: "var(--text-muted)",
-                  marginBottom: 24,
-                  lineHeight: 1.6,
-                }}
-              >
+              <p style={{ fontSize: "0.9rem", color: "#6b8077", marginBottom: 24, lineHeight: 1.6 }}>
                 {errorMsg}
               </p>
-              <button onClick={handleReset} className="btn-primary">
-                Try Again
-              </button>
+              <button onClick={handleReset} className="btn-primary">Try Again</button>
             </div>
           </div>
         )}
       </section>
 
-      {/* ========== Divider ========== */}
       <div className="section-divider" />
 
-      {/* ========== Scan History & Stats ========== */}
       <ScanHistory />
 
       {/* ========== Footer ========== */}
       <footer
         style={{
           padding: "48px 24px 32px",
-          borderTop: "1px solid rgba(255,255,255,0.05)",
+          borderTop: "1px solid #e2e8e5",
           textAlign: "center",
+          background: "white",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 16 }}>
@@ -346,19 +286,9 @@ export default function Home() {
           >
             🌿
           </div>
-          <span
-            style={{
-              fontSize: "1rem",
-              fontWeight: 800,
-              background: "linear-gradient(135deg, #4ade80, #22c55e)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
-            KrishiVision
-          </span>
+          <span style={{ fontSize: "1rem", fontWeight: 800, color: "#16a34a" }}>KrishiVision</span>
         </div>
-        <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginBottom: 16, lineHeight: 1.6 }}>
+        <p style={{ fontSize: "0.8rem", color: "#6b8077", marginBottom: 16, lineHeight: 1.6 }}>
           AI-powered crop disease detection — protecting harvests with technology.
         </p>
         <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", marginBottom: 20 }}>
@@ -369,9 +299,9 @@ export default function Home() {
                 fontSize: "0.65rem",
                 padding: "3px 10px",
                 borderRadius: 6,
-                background: "rgba(255,255,255,0.04)",
-                color: "var(--text-muted)",
-                border: "1px solid rgba(255,255,255,0.06)",
+                background: "#f0fdf4",
+                color: "#374a3f",
+                border: "1px solid #dcfce7",
                 fontWeight: 500,
               }}
             >
@@ -379,7 +309,7 @@ export default function Home() {
             </span>
           ))}
         </div>
-        <p style={{ fontSize: "0.7rem", color: "var(--text-muted)", opacity: 0.5 }}>
+        <p style={{ fontSize: "0.7rem", color: "#6b8077", opacity: 0.6 }}>
           © {new Date().getFullYear()} KrishiVision. Built for farmers.
         </p>
       </footer>

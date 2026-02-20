@@ -16,26 +16,23 @@ export default function Header() {
                 right: 0,
                 zIndex: 50,
                 padding: "12px 32px",
-                background: "rgba(5, 13, 9, 0.85)",
-                backdropFilter: "blur(24px)",
-                WebkitBackdropFilter: "blur(24px)",
-                borderBottom: "1px solid rgba(34, 197, 94, 0.08)",
+                background: "rgba(255, 255, 255, 0.9)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                borderBottom: "1px solid #e2e8e5",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
             }}
         >
-            {/* Logo + Brand */}
             <a href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
                 <Logo size={38} />
-                <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+                <div style={{ display: "flex", flexDirection: "column" }}>
                     <span
                         style={{
                             fontSize: "1.15rem",
                             fontWeight: 800,
-                            background: "linear-gradient(135deg, #4ade80, #22c55e)",
-                            WebkitBackgroundClip: "text",
-                            WebkitTextFillColor: "transparent",
+                            color: "#16a34a",
                             letterSpacing: "-0.02em",
                             lineHeight: 1.1,
                         }}
@@ -45,11 +42,10 @@ export default function Header() {
                     <span
                         style={{
                             fontSize: "0.55rem",
-                            fontWeight: 500,
-                            color: "var(--text-muted)",
+                            fontWeight: 600,
+                            color: "#6b8077",
                             letterSpacing: "0.12em",
                             textTransform: "uppercase",
-                            opacity: 0.7,
                         }}
                     >
                         AI Crop Intelligence
@@ -57,7 +53,6 @@ export default function Header() {
                 </div>
             </a>
 
-            {/* Nav links */}
             <nav style={{ display: "flex", alignItems: "center", gap: "28px" }}>
                 {[
                     { href: "#how-it-works", label: "How It Works" },
@@ -68,41 +63,22 @@ export default function Header() {
                         key={link.href}
                         href={link.href}
                         style={{
-                            color: "var(--text-muted)",
+                            color: "#374a3f",
                             textDecoration: "none",
                             fontSize: "0.85rem",
                             fontWeight: 500,
                             transition: "color 0.2s",
-                            position: "relative",
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = "#4ade80")}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = "#16a34a")}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = "#374a3f")}
                     >
                         {link.label}
                     </a>
                 ))}
                 <button
                     onClick={scrollToUpload}
-                    style={{
-                        padding: "9px 22px",
-                        fontSize: "0.82rem",
-                        fontWeight: 700,
-                        color: "#050d09",
-                        background: "linear-gradient(135deg, #4ade80, #22c55e)",
-                        border: "none",
-                        borderRadius: "10px",
-                        cursor: "pointer",
-                        transition: "all 0.3s ease",
-                        boxShadow: "0 0 20px rgba(34,197,94,0.2)",
-                    }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = "translateY(-1px)";
-                        e.currentTarget.style.boxShadow = "0 0 30px rgba(34,197,94,0.35)";
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = "translateY(0)";
-                        e.currentTarget.style.boxShadow = "0 0 20px rgba(34,197,94,0.2)";
-                    }}
+                    className="btn-primary"
+                    style={{ padding: "9px 22px", fontSize: "0.82rem" }}
                 >
                     🔬 Scan Leaf
                 </button>

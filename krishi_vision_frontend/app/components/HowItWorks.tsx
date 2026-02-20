@@ -1,130 +1,107 @@
 "use client";
 
-const steps = [
-    {
-        number: "01",
-        icon: "📸",
-        title: "Upload a Photo",
-        description: "Take a photo of a sick leaf from your crop and upload it — or use your phone camera directly.",
-    },
-    {
-        number: "02",
-        icon: "🔧",
-        title: "Image Prepared",
-        description: "The app automatically resizes and cleans up the image so the AI model can read it properly.",
-    },
-    {
-        number: "03",
-        icon: "🧠",
-        title: "AI Analyses",
-        description: "A deep learning model scans the image and compares it to thousands of known disease patterns.",
-    },
-    {
-        number: "04",
-        icon: "📊",
-        title: "Result Generated",
-        description: "The model picks the most likely disease and calculates how confident it is in the answer.",
-    },
-    {
-        number: "05",
-        icon: "✅",
-        title: "Get Your Answer",
-        description: "See the disease name, confidence level, treatment advice, and prevention tips instantly.",
-    },
+import { StepIcon } from "./Illustrations";
+
+const STEPS = [
+    { step: 1, title: "Capture", desc: "Take a photo of the diseased leaf or upload from gallery" },
+    { step: 2, title: "Analyze", desc: "Our AI scans and identifies the disease pattern instantly" },
+    { step: 3, title: "Diagnose", desc: "Get the disease name with confidence percentage" },
+    { step: 4, title: "Treat", desc: "Receive eco-friendly treatment recommendations" },
+    { step: 5, title: "Prevent", desc: "Learn prevention tips to protect future crops" },
 ];
 
 export default function HowItWorks() {
     return (
-        <section
-            id="how-it-works"
-            style={{
-                padding: "100px 24px",
-                maxWidth: 1100,
-                margin: "0 auto",
-            }}
-        >
-            <div style={{ textAlign: "center", marginBottom: 64 }} className="animate-fade-in-up">
+        <section id="how-it-works" style={{ padding: "80px 24px", maxWidth: 1000, margin: "0 auto" }}>
+            <div style={{ textAlign: "center", marginBottom: 56 }} className="animate-fade-in-up">
                 <p
                     style={{
-                        fontSize: "0.85rem",
-                        fontWeight: 600,
-                        color: "var(--kv-green-400)",
+                        fontSize: "0.8rem",
+                        fontWeight: 700,
+                        color: "#22c55e",
                         textTransform: "uppercase",
-                        letterSpacing: "0.15em",
+                        letterSpacing: "0.2em",
                         marginBottom: 12,
                     }}
                 >
-                    How It Works
+                    Simple Process
                 </p>
                 <h2
                     style={{
-                        fontSize: "clamp(1.8rem, 4vw, 2.5rem)",
+                        fontSize: "clamp(1.8rem, 4vw, 2.8rem)",
                         fontWeight: 800,
+                        color: "#0f1a14",
                         lineHeight: 1.2,
-                        color: "var(--text-primary)",
                     }}
                 >
-                    Five Steps. Under One Minute.
+                    How It Works
                 </h2>
             </div>
 
             <div
                 style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                    gap: 24,
+                    gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))",
+                    gap: 20,
                 }}
             >
-                {steps.map((step, i) => (
+                {STEPS.map((s, i) => (
                     <div
-                        key={step.number}
-                        className="glass-card animate-fade-in-up"
+                        key={s.step}
+                        className="animate-fade-in-up"
                         style={{
-                            padding: "32px 24px",
+                            background: "white",
+                            border: "1px solid #e2e8e5",
+                            borderRadius: 18,
+                            padding: "32px 20px",
                             textAlign: "center",
-                            animationDelay: `${i * 100}ms`,
-                            opacity: 0,
-                            animationFillMode: "forwards",
+                            transition: "all 0.3s ease",
+                            animationDelay: `${i * 0.1}s`,
+                            cursor: "default",
+                            position: "relative",
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.boxShadow = "0 8px 32px rgba(34,197,94,0.12)";
+                            e.currentTarget.style.borderColor = "#22c55e";
+                            e.currentTarget.style.transform = "translateY(-4px)";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.boxShadow = "none";
+                            e.currentTarget.style.borderColor = "#e2e8e5";
+                            e.currentTarget.style.transform = "translateY(0)";
                         }}
                     >
+                        {/* Step number */}
                         <div
                             style={{
-                                fontSize: "2.5rem",
-                                marginBottom: 16,
+                                position: "absolute",
+                                top: 12,
+                                right: 14,
+                                fontSize: "0.65rem",
+                                fontWeight: 800,
+                                color: "#bbf7d0",
+                                fontFamily: "monospace",
                             }}
                         >
-                            {step.icon}
+                            0{s.step}
                         </div>
-                        <div
+
+                        {/* SVG Icon */}
+                        <div style={{ marginBottom: 16, display: "flex", justifyContent: "center" }}>
+                            <StepIcon step={s.step} />
+                        </div>
+
+                        <h3
                             style={{
-                                fontSize: "0.7rem",
+                                fontSize: "1rem",
                                 fontWeight: 700,
-                                color: "var(--kv-green-400)",
-                                letterSpacing: "0.1em",
+                                color: "#0f1a14",
                                 marginBottom: 8,
                             }}
                         >
-                            STEP {step.number}
-                        </div>
-                        <h3
-                            style={{
-                                fontSize: "1.1rem",
-                                fontWeight: 700,
-                                color: "var(--text-primary)",
-                                marginBottom: 10,
-                            }}
-                        >
-                            {step.title}
+                            {s.title}
                         </h3>
-                        <p
-                            style={{
-                                fontSize: "0.85rem",
-                                lineHeight: 1.6,
-                                color: "var(--text-muted)",
-                            }}
-                        >
-                            {step.description}
-                        </p>
+                        <p style={{ fontSize: "0.82rem", color: "#6b8077", lineHeight: 1.5 }}>{s.desc}</p>
                     </div>
                 ))}
             </div>
