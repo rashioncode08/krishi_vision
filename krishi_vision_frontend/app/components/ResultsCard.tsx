@@ -48,7 +48,7 @@ export default function ResultsCard({ result }: ResultsCardProps) {
                 }}
             >
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-                    <span style={{ fontSize: "1.5rem" }}>{isHealthy ? "✅" : "🔬"}</span>
+                    <span style={{ fontSize: "1.5rem" }}></span>
                     <h3 style={{ fontSize: "1.5rem", fontWeight: 800, color: "#0f1a14", margin: 0 }}>
                         {prediction.disease}
                     </h3>
@@ -96,7 +96,7 @@ export default function ResultsCard({ result }: ResultsCardProps) {
                     }}
                 >
                     <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-                        <span style={{ fontSize: "1.3rem" }}>💊</span>
+                        <span style={{ fontSize: "1.3rem" }}></span>
                         <h4 style={{ fontSize: "1.1rem", fontWeight: 700, color: "#0f1a14", margin: 0 }}>
                             Treatment Options
                         </h4>
@@ -120,7 +120,7 @@ export default function ResultsCard({ result }: ResultsCardProps) {
                                                 border: "1px solid #dcfce7",
                                             }}
                                         >
-                                            🌱 Eco
+                                            Eco
                                         </span>
                                     )}
                                 </div>
@@ -140,7 +140,7 @@ export default function ResultsCard({ result }: ResultsCardProps) {
                     }}
                 >
                     <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-                        <span style={{ fontSize: "1.3rem" }}>🛡️</span>
+                        <span style={{ fontSize: "1.3rem" }}></span>
                         <h4 style={{ fontSize: "1.1rem", fontWeight: 700, color: "#0f1a14", margin: 0 }}>
                             Prevention Tips
                         </h4>

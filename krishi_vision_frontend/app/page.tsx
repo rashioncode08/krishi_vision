@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Header from "./components/Header";
 import HowItWorks from "./components/HowItWorks";
 import ImageUpload from "./components/ImageUpload";
@@ -9,6 +9,7 @@ import ResultsCard from "./components/ResultsCard";
 import ScanHistory from "./components/ScanHistory";
 import WeatherDashboard from "./components/WeatherDashboard";
 import { HeroIllustration, LeafScanSVG } from "./components/Illustrations";
+import MobileScannerOverlay from "./components/MobileScannerOverlay";
 
 const RAW_API_URL =
   process.env.NEXT_PUBLIC_API_URL ||
@@ -27,6 +28,16 @@ export default function Home() {
   const [preview, setPreview] = useState<string>("");
   const [result, setResult] = useState<PredictionResult>(null);
   const [errorMsg, setErrorMsg] = useState("");
+  const [showMobileScanner, setShowMobileScanner] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   const handleImageSelected = useCallback(async (file: File, previewUrl: string) => {
     setPreview(previewUrl);
@@ -63,6 +74,13 @@ export default function Home() {
     setResult(null);
     setErrorMsg("");
   }, []);
+
+  const handleMobileScanClick = (e: React.MouseEvent) => {
+    if (isMobile) {
+      e.preventDefault();
+      setShowMobileScanner(true);
+    }
+  };
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg-secondary)" }}>
@@ -114,7 +132,7 @@ export default function Home() {
               marginBottom: 28,
             }}
           >
-            🌾 AI-Powered Crop Protection
+            AI-Powered Crop Protection
           </div>
 
           {/* Heading */}
@@ -147,8 +165,13 @@ export default function Home() {
           </p>
 
           <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
-            <a href="#upload-section" className="btn-primary" style={{ fontSize: "1.05rem", padding: "16px 36px" }}>
-              🔍 Start Scanning
+            <a 
+              href="#upload-section" 
+              onClick={handleMobileScanClick}
+              className="btn-primary" 
+              style={{ fontSize: "1.05rem", padding: "16px 36px" }}
+            >
+              Start Scanning
             </a>
             <a href="#how-it-works" className="btn-secondary" style={{ fontSize: "1.05rem", padding: "16px 36px" }}>
               Learn More
@@ -166,7 +189,7 @@ export default function Home() {
             className="animate-fade-in delay-500"
           >
             {[
-              { value: "15+", label: "Diseases Detected" },
+              { value: "27", label: "Diseases Detected" },
               { value: "<1min", label: "Analysis Time" },
               { value: "95%+", label: "Accuracy" },
             ].map((stat) => (
@@ -233,7 +256,7 @@ export default function Home() {
             <ResultsCard result={result} />
             <div style={{ textAlign: "center", marginTop: 32 }}>
               <button onClick={handleReset} className="btn-primary" style={{ padding: "14px 32px" }}>
-                📸 Scan Another Leaf
+                Scan Another Leaf
               </button>
             </div>
           </div>
@@ -251,7 +274,7 @@ export default function Home() {
                 boxShadow: "0 4px 16px rgba(239,68,68,0.08)",
               }}
             >
-              <div style={{ fontSize: "2.5rem", marginBottom: 16 }}>⚠️</div>
+              <div style={{ fontSize: "2.5rem", marginBottom: 16 }}></div>
               <h3 style={{ fontSize: "1.2rem", fontWeight: 700, color: "#0f1a14", marginBottom: 8 }}>
                 Analysis Failed
               </h3>
@@ -294,7 +317,7 @@ export default function Home() {
               fontSize: "14px",
             }}
           >
-            🌿
+            
           </div>
           <span style={{ fontSize: "1rem", fontWeight: 800, color: "#16a34a" }}>KrishiVision</span>
         </div>
@@ -323,6 +346,21 @@ export default function Home() {
           © {new Date().getFullYear()} KrishiVision. Built for farmers.
         </p>
       </footer>
+
+      {showMobileScanner && (
+        <MobileScannerOverlay
+          onClose={() => setShowMobileScanner(false)}
+          onProcessImage={(file) => {
+            const previewUrl = URL.createObjectURL(file);
+            handleImageSelected(file, previewUrl);
+            
+            // On mobile, scroll down to the processing section automatically
+            setTimeout(() => {
+              document.getElementById("upload-section")?.scrollIntoView({ behavior: "auto" });
+            }, 100);
+          }}
+        />
+      )}
     </div>
   );
 }

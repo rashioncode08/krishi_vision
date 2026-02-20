@@ -1,8 +1,19 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Logo from "./Logo";
 
 export default function Header() {
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const mq = window.matchMedia("(max-width: 768px)");
+        const handler = (e: MediaQueryListEvent | MediaQueryList) => setIsMobile(e.matches);
+        handler(mq); // set initial value
+        mq.addEventListener("change", handler as (e: MediaQueryListEvent) => void);
+        return () => mq.removeEventListener("change", handler as (e: MediaQueryListEvent) => void);
+    }, []);
+
     const scrollToUpload = () => {
         document.getElementById("upload-section")?.scrollIntoView({ behavior: "smooth" });
     };
@@ -15,7 +26,7 @@ export default function Header() {
                 left: 0,
                 right: 0,
                 zIndex: 50,
-                padding: "12px 32px",
+                padding: isMobile ? "10px 16px" : "12px 32px",
                 background: "rgba(255, 255, 255, 0.9)",
                 backdropFilter: "blur(20px)",
                 WebkitBackdropFilter: "blur(20px)",
@@ -25,12 +36,13 @@ export default function Header() {
                 justifyContent: "space-between",
             }}
         >
+            {/* ---- Left: Logo ---- */}
             <a href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
-                <Logo size={38} />
+                <Logo size={isMobile ? 32 : 38} />
                 <div style={{ display: "flex", flexDirection: "column" }}>
                     <span
                         style={{
-                            fontSize: "1.15rem",
+                            fontSize: isMobile ? "1rem" : "1.15rem",
                             fontWeight: 800,
                             color: "#16a34a",
                             letterSpacing: "-0.02em",
@@ -39,48 +51,55 @@ export default function Header() {
                     >
                         KrishiVision
                     </span>
-                    <span
-                        style={{
-                            fontSize: "0.55rem",
-                            fontWeight: 600,
-                            color: "#6b8077",
-                            letterSpacing: "0.12em",
-                            textTransform: "uppercase",
-                        }}
-                    >
-                        AI Crop Intelligence
-                    </span>
+                    {!isMobile && (
+                        <span
+                            style={{
+                                fontSize: "0.55rem",
+                                fontWeight: 600,
+                                color: "#6b8077",
+                                letterSpacing: "0.12em",
+                                textTransform: "uppercase",
+                            }}
+                        >
+                            AI Crop Intelligence
+                        </span>
+                    )}
                 </div>
             </a>
 
-            <nav style={{ display: "flex", alignItems: "center", gap: "28px" }}>
-                {[
-                    { href: "#how-it-works", label: "How It Works" },
-                    { href: "#upload-section", label: "Diagnose" },
-                    { href: "#weather", label: "Weather" },
-                    { href: "#scan-history", label: "Dashboard" },
-                ].map((link) => (
-                    <a
-                        key={link.href}
-                        href={link.href}
-                        style={{
-                            color: "#374a3f",
-                            textDecoration: "none",
-                            fontSize: "0.85rem",
-                            fontWeight: 500,
-                            transition: "color 0.2s",
-                        }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = "#16a34a")}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = "#374a3f")}
-                    >
-                        {link.label}
-                    </a>
-                ))}
+            {/* ---- Right: Nav (desktop) / Login only (mobile) ---- */}
+            <nav style={{ display: "flex", alignItems: "center", gap: isMobile ? "12px" : "28px" }}>
+                {/* Nav links — hidden on mobile */}
+                {!isMobile &&
+                    [
+                        { href: "#how-it-works", label: "How It Works" },
+                        { href: "#upload-section", label: "Diagnose" },
+                        { href: "#weather", label: "Weather" },
+                        { href: "#scan-history", label: "Dashboard" },
+                    ].map((link) => (
+                        <a
+                            key={link.href}
+                            href={link.href}
+                            style={{
+                                color: "#374a3f",
+                                textDecoration: "none",
+                                fontSize: "0.85rem",
+                                fontWeight: 500,
+                                transition: "color 0.2s",
+                            }}
+                            onMouseEnter={(e) => (e.currentTarget.style.color = "#16a34a")}
+                            onMouseLeave={(e) => (e.currentTarget.style.color = "#374a3f")}
+                        >
+                            {link.label}
+                        </a>
+                    ))}
+
+                {/* Login button — always visible */}
                 <a
                     href="/login"
                     style={{
-                        padding: "9px 22px",
-                        fontSize: "0.82rem",
+                        padding: isMobile ? "7px 16px" : "9px 22px",
+                        fontSize: isMobile ? "0.78rem" : "0.82rem",
                         fontWeight: 600,
                         color: "#16a34a",
                         border: "2px solid #16a34a",
@@ -97,15 +116,19 @@ export default function Header() {
                         e.currentTarget.style.color = "#16a34a";
                     }}
                 >
-                    🔑 Login
+                    Login
                 </a>
-                <button
-                    onClick={scrollToUpload}
-                    className="btn-primary"
-                    style={{ padding: "9px 22px", fontSize: "0.82rem" }}
-                >
-                    🔬 Scan Leaf
-                </button>
+
+                {/* Scan Leaf button — hidden on mobile */}
+                {!isMobile && (
+                    <button
+                        onClick={scrollToUpload}
+                        className="btn-primary"
+                        style={{ padding: "9px 22px", fontSize: "0.82rem" }}
+                    >
+                        Scan Leaf
+                    </button>
+                )}
             </nav>
         </header>
     );
