@@ -76,6 +76,29 @@ export default function Header() {
                         {link.label}
                     </a>
                 ))}
+                <a
+                    href="/login"
+                    style={{
+                        padding: "9px 22px",
+                        fontSize: "0.82rem",
+                        fontWeight: 600,
+                        color: "#16a34a",
+                        border: "2px solid #16a34a",
+                        borderRadius: 50,
+                        textDecoration: "none",
+                        transition: "all 0.3s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.background = "#16a34a";
+                        e.currentTarget.style.color = "white";
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.background = "transparent";
+                        e.currentTarget.style.color = "#16a34a";
+                    }}
+                >
+                    🔑 Login
+                </a>
                 <button
                     onClick={scrollToUpload}
                     className="btn-primary"
