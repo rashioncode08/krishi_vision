@@ -118,7 +118,7 @@ def mock_predict(image_bytes: bytes) -> dict:
 @app.get("/")
 async def root():
     """Health check endpoint."""
-    model_label = "real (Local HF)" if is_model_available() else ("gemini-1.5-flash" if is_gemini_api_available() else "mock (demo)")
+    model_label = "real (Local HF)" if is_model_available() else ("gemini-2.5-flash" if is_gemini_api_available() else "mock (demo)")
     return {
         "status": "healthy",
         "service": "KrishiVision API",
@@ -229,12 +229,13 @@ async def test_ai_api():
         if not is_gemini_api_available():
              return {"status": "error", "message": "Gemini API dependencies or key missing", "has_key": bool(GEMINI_API_KEY)}
              
-        model = get_gemini_client()
-        response = model.generate_content("Hello! Are you working?")
+        import google.generativeai as genai
+        debug_model = genai.GenerativeModel("gemini-2.5-flash")
+        response = debug_model.generate_content("Hello! Are you working?")
         
         return {
             "status": "success",
-            "model": "gemini-1.5-flash-8b",
+            "model": "gemini-2.5-flash",
             "has_key": bool(GEMINI_API_KEY),
             "response": response.text
         }
