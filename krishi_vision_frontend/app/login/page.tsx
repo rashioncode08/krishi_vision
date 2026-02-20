@@ -2,66 +2,252 @@
 
 import { useState } from "react";
 
-// ─── Farmer Illustration SVG ────────────────────────────────
+// ─── Farmer Illustration SVG (Premium Animated) ─────────────
 function FarmerIllustration() {
     return (
-        <svg width="320" height="400" viewBox="0 0 320 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-            {/* Ground / field */}
-            <ellipse cx="160" cy="370" rx="140" ry="20" fill="#556B2F" opacity={0.1} />
+        <svg width="340" height="420" viewBox="0 0 340 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                {/* Skin gradient */}
+                <radialGradient id="skinGrad" cx="0.5" cy="0.4" r="0.6">
+                    <stop offset="0%" stopColor="#F5D6A8" />
+                    <stop offset="100%" stopColor="#D4A56A" />
+                </radialGradient>
+                {/* Turban gradient */}
+                <linearGradient id="turbanGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#D4A017" />
+                    <stop offset="100%" stopColor="#B8880F" />
+                </linearGradient>
+                {/* Shirt gradient */}
+                <linearGradient id="shirtGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#6B8E3D" />
+                    <stop offset="100%" stopColor="#556B2F" />
+                </linearGradient>
+                {/* Phone screen glow */}
+                <radialGradient id="screenGlow" cx="0.5" cy="0.5" r="0.5">
+                    <stop offset="0%" stopColor="#A8E6CF" />
+                    <stop offset="100%" stopColor="#56B870" />
+                </radialGradient>
+                {/* Scanning beam */}
+                <linearGradient id="scanBeam" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#D4A017" stopOpacity="0" />
+                    <stop offset="50%" stopColor="#D4A017" stopOpacity="0.6" />
+                    <stop offset="100%" stopColor="#D4A017" stopOpacity="0" />
+                </linearGradient>
+            </defs>
 
-            {/* Crop plants in background */}
-            <g opacity={0.3}>
-                <path d="M60 370 Q65 320 55 290 Q70 300 75 370" fill="#556B2F" />
-                <path d="M80 370 Q85 310 75 275 Q90 290 95 370" fill="#556B2F" />
-                <path d="M240 370 Q245 325 235 295 Q250 305 255 370" fill="#556B2F" />
-                <path d="M260 370 Q265 315 255 280 Q270 295 275 370" fill="#556B2F" />
+            {/* ── Background field ── */}
+            <ellipse cx="170" cy="388" rx="150" ry="22" fill="#556B2F" opacity={0.08} />
+
+            {/* Grass tufts */}
+            <g opacity={0.25}>
+                <path d="M50 388 Q52 360 46 338" stroke="#556B2F" strokeWidth="2" fill="none" strokeLinecap="round" />
+                <path d="M55 388 Q58 355 52 330" stroke="#6B8E3D" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+                <path d="M60 388 Q65 365 58 345" stroke="#556B2F" strokeWidth="2" fill="none" strokeLinecap="round" />
+                <path d="M270 388 Q272 362 268 342" stroke="#556B2F" strokeWidth="2" fill="none" strokeLinecap="round" />
+                <path d="M278 388 Q281 358 275 335" stroke="#6B8E3D" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+                <path d="M285 388 Q289 368 282 350" stroke="#556B2F" strokeWidth="2" fill="none" strokeLinecap="round" />
             </g>
 
-            {/* Body */}
-            <rect x="130" y="200" width="60" height="100" rx="8" fill="#556B2F" />
+            {/* Crop stalks with leaves */}
+            <g opacity={0.2}>
+                <path d="M75 388 Q78 330 72 295" stroke="#556B2F" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+                <path d="M72 330 Q60 320 55 310" stroke="#556B2F" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+                <path d="M72 330 Q55 325 48 318" fill="#556B2F" opacity={0.5} />
+                <path d="M78 315 Q88 305 95 300" stroke="#6B8E3D" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+                <path d="M255 388 Q258 335 252 300" stroke="#556B2F" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+                <path d="M255 340 Q245 332 238 325" stroke="#556B2F" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+                <path d="M258 320 Q268 310 275 305" stroke="#6B8E3D" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+            </g>
 
-            {/* Arms */}
-            <rect x="100" y="210" width="35" height="14" rx="7" fill="#556B2F" />
-            <rect x="185" y="215" width="40" height="14" rx="7" fill="#556B2F" transform="rotate(-20 185 215)" />
+            {/* ── Farmer body group with idle animation ── */}
+            <g>
+                <animateTransform attributeName="transform" type="translate" values="0,0;0,-3;0,0" dur="3s" repeatCount="indefinite" />
 
-            {/* Legs */}
-            <rect x="137" y="295" width="18" height="60" rx="6" fill="#3E2723" />
-            <rect x="165" y="295" width="18" height="60" rx="6" fill="#3E2723" />
+                {/* Shadow under farmer */}
+                <ellipse cx="155" cy="386" rx="45" ry="8" fill="#3E2723" opacity={0.08} />
 
-            {/* Shoes */}
-            <rect x="133" y="348" width="26" height="12" rx="6" fill="#3E2723" />
-            <rect x="161" y="348" width="26" height="12" rx="6" fill="#3E2723" />
+                {/* ── Legs ── */}
+                <path d="M138 310 L134 365 Q134 372 140 372 L148 372 Q152 372 152 368 L150 310" fill="#4A3728" />
+                <path d="M162 310 L158 365 Q158 372 164 372 L172 372 Q176 372 176 368 L174 310" fill="#3E2723" />
+                {/* Shoes */}
+                <path d="M130 368 Q130 378 142 378 L152 378 Q156 378 156 374 L154 368" fill="#3E2723" rx="4" />
+                <path d="M156 368 Q156 378 168 378 L178 378 Q182 378 182 374 L180 368" fill="#2D1E15" rx="4" />
+                {/* Shoe highlights */}
+                <path d="M134 372 Q140 370 150 372" stroke="#5C3D2E" strokeWidth="0.8" opacity={0.3} />
+                <path d="M160 372 Q166 370 176 372" stroke="#5C3D2E" strokeWidth="0.8" opacity={0.3} />
 
-            {/* Head */}
-            <circle cx="160" cy="175" r="30" fill="#D4A017" opacity={0.3} />
-            <circle cx="160" cy="175" r="26" fill="#E8C872" />
+                {/* ── Dhoti / lower garment ── */}
+                <path d="M125 280 Q130 315 138 312 L174 312 Q182 315 187 280 Z" fill="#F5F0E0" />
+                <path d="M132 290 Q155 295 180 290" stroke="#E8DFC8" strokeWidth="0.8" fill="none" />
+                <path d="M130 300 Q155 305 182 300" stroke="#E8DFC8" strokeWidth="0.8" fill="none" />
 
-            {/* Turban */}
-            <path d="M134 165 Q135 140 160 135 Q185 140 186 165 Q175 155 160 153 Q145 155 134 165Z" fill="#D4A017" />
-            <path d="M140 165 Q145 150 160 147 Q175 150 180 165" fill="#D4A017" opacity={0.7} />
+                {/* ── Kurta / shirt ── */}
+                <path d="M118 210 Q120 195 155 188 Q190 195 192 210 L195 285 Q190 290 155 292 Q120 290 115 285 Z" fill="url(#shirtGrad)" />
+                {/* Shirt collar */}
+                <path d="M140 195 Q155 204 170 195" stroke="#4A5F25" strokeWidth="1.5" fill="none" />
+                {/* Shirt center line */}
+                <line x1="155" y1="200" x2="155" y2="288" stroke="#4A5F25" strokeWidth="0.8" opacity={0.3} />
+                {/* Buttons */}
+                <circle cx="155" cy="215" r="2" fill="#D4A017" opacity={0.6} />
+                <circle cx="155" cy="235" r="2" fill="#D4A017" opacity={0.6} />
+                <circle cx="155" cy="255" r="2" fill="#D4A017" opacity={0.6} />
+                {/* Shirt folds */}
+                <path d="M130 230 Q140 235 135 250" stroke="#4A5F25" strokeWidth="0.6" fill="none" opacity={0.3} />
+                <path d="M175 228 Q168 234 172 248" stroke="#4A5F25" strokeWidth="0.6" fill="none" opacity={0.3} />
 
-            {/* Face */}
-            <circle cx="150" cy="175" r="3" fill="#3E2723" /> {/* Left eye */}
-            <circle cx="170" cy="175" r="3" fill="#3E2723" /> {/* Right eye */}
-            <path d="M155 185 Q160 190 165 185" stroke="#3E2723" strokeWidth="2" fill="none" strokeLinecap="round" /> {/* Smile */}
-            <path d="M148 170 L155 168" stroke="#3E2723" strokeWidth="1.5" strokeLinecap="round" /> {/* Left brow */}
-            <path d="M165 168 L172 170" stroke="#3E2723" strokeWidth="1.5" strokeLinecap="round" /> {/* Right brow */}
+                {/* ── Left arm (holding leaf) ── */}
+                <g>
+                    <path d="M118 210 Q100 215 90 235 Q85 248 92 255" fill="url(#shirtGrad)" />
+                    {/* Left hand */}
+                    <circle cx="92" cy="256" r="10" fill="url(#skinGrad)" />
+                    {/* Fingers */}
+                    <path d="M86 250 Q82 245 80 248" stroke="#D4A56A" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+                    <path d="M84 254 Q80 250 78 252" stroke="#D4A56A" strokeWidth="2.5" fill="none" strokeLinecap="round" />
 
-            {/* Phone in right hand */}
-            <rect x="210" y="195" width="24" height="40" rx="4" fill="#3E2723" transform="rotate(-15 210 195)" />
-            <rect x="213" y="200" width="18" height="28" rx="2" fill="#87CEEB" opacity={0.6} transform="rotate(-15 213 200)" />
+                    {/* Leaf in left hand */}
+                    <g>
+                        <animateTransform attributeName="transform" type="rotate" values="-5,80,240;5,80,240;-5,80,240" dur="2.5s" repeatCount="indefinite" />
+                        <path d="M80 240 Q65 225 60 205 Q75 215 85 230 Z" fill="#6B8E3D" />
+                        <path d="M80 240 Q70 222 64 210" stroke="#556B2F" strokeWidth="1" fill="none" opacity={0.5} />
+                        <path d="M74 228 Q68 222 63 215" stroke="#556B2F" strokeWidth="0.6" fill="none" opacity={0.3} />
+                        <path d="M78 234 Q72 228 68 222" stroke="#556B2F" strokeWidth="0.6" fill="none" opacity={0.3} />
+                        {/* Disease spots on leaf */}
+                        <circle cx="70" cy="220" r="3" fill="#8B5E3C" opacity={0.4} />
+                        <circle cx="75" cy="228" r="2" fill="#8B5E3C" opacity={0.3} />
+                    </g>
+                </g>
 
-            {/* Leaf scanning effect from phone */}
-            <g opacity={0.6}>
-                <path d="M238 200 Q250 190 248 175 Q245 185 235 190Z" fill="#556B2F" />
-                <circle cx="245" cy="185" r="12" fill="none" stroke="#D4A017" strokeWidth="1.5" strokeDasharray="3,3" opacity={0.8}>
-                    <animateTransform attributeName="transform" type="rotate" from="0 245 185" to="360 245 185" dur="3s" repeatCount="indefinite" />
+                {/* ── Right arm (holding phone) ── */}
+                <g>
+                    <path d="M192 210 Q210 218 218 240 Q222 255 215 262" fill="url(#shirtGrad)" />
+                    {/* Right hand */}
+                    <circle cx="215" cy="263" r="10" fill="url(#skinGrad)" />
+
+                    {/* Phone */}
+                    <g transform="rotate(-10 220 258)">
+                        <rect x="205" y="238" width="30" height="50" rx="5" fill="#2D1E15" />
+                        <rect x="208" y="242" width="24" height="40" rx="3" fill="url(#screenGlow)" />
+                        {/* Screen content - leaf icon */}
+                        <path d="M220 252 Q215 260 218 268 Q220 260 225 255 Z" fill="#556B2F" opacity={0.6} />
+                        {/* Scan line animation */}
+                        <rect x="208" y="250" width="24" height="2" fill="url(#scanBeam)" rx="1">
+                            <animate attributeName="y" values="242;278;242" dur="2s" repeatCount="indefinite" />
+                            <animate attributeName="opacity" values="0.8;0.3;0.8" dur="2s" repeatCount="indefinite" />
+                        </rect>
+                        {/* Screen reflection */}
+                        <path d="M208 242 L220 242 L208 260 Z" fill="white" opacity={0.1} />
+                        {/* Home indicator */}
+                        <rect x="215" y="280" width="10" height="2" rx="1" fill="#5C3D2E" opacity={0.5} />
+                    </g>
+
+                    {/* Finger gripping phone */}
+                    <path d="M222 255 Q228 252 230 256" stroke="#D4A56A" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+                </g>
+
+                {/* ── Neck ── */}
+                <rect x="147" y="170" width="16" height="22" rx="4" fill="url(#skinGrad)" />
+
+                {/* ── Head ── */}
+                <g>
+                    {/* Head shape */}
+                    <ellipse cx="155" cy="148" rx="32" ry="35" fill="url(#skinGrad)" />
+
+                    {/* Ears */}
+                    <ellipse cx="123" cy="150" rx="6" ry="8" fill="#D4A56A" />
+                    <ellipse cx="187" cy="150" rx="6" ry="8" fill="#D4A56A" />
+
+                    {/* ── Turban ── */}
+                    <path d="M122 142 Q125 105 155 95 Q185 105 188 142 Q180 130 155 125 Q130 130 122 142Z" fill="url(#turbanGrad)" />
+                    {/* Turban wraps */}
+                    <path d="M128 138 Q140 125 155 122 Q170 125 182 138" stroke="#C4920E" strokeWidth="2" fill="none" opacity={0.5} />
+                    <path d="M126 132 Q140 118 155 115 Q170 118 184 132" stroke="#C4920E" strokeWidth="1.5" fill="none" opacity={0.3} />
+                    {/* Turban tail hanging */}
+                    <path d="M188 138 Q195 140 198 155 Q196 165 190 170" stroke="url(#turbanGrad)" strokeWidth="6" fill="none" strokeLinecap="round" />
+                    <path d="M188 138 Q195 140 198 155 Q196 165 190 170" stroke="#C4920E" strokeWidth="2" fill="none" strokeLinecap="round" opacity={0.3} />
+                    {/* Turban jewel */}
+                    <circle cx="155" cy="115" r="4" fill="#D4A017" />
+                    <circle cx="155" cy="115" r="2.5" fill="#E8C54E" />
+                    <circle cx="154" cy="114" r="1" fill="white" opacity={0.6} />
+
+                    {/* ── Face ── */}
+                    {/* Eyebrows */}
+                    <path d="M138 140 Q143 136 150 139" stroke="#3E2723" strokeWidth="2" fill="none" strokeLinecap="round" />
+                    <path d="M160 139 Q167 136 172 140" stroke="#3E2723" strokeWidth="2" fill="none" strokeLinecap="round" />
+                    {/* Eyes */}
+                    <ellipse cx="145" cy="148" rx="4.5" ry="5" fill="white" />
+                    <ellipse cx="165" cy="148" rx="4.5" ry="5" fill="white" />
+                    <circle cx="146" cy="148" r="2.5" fill="#3E2723" />
+                    <circle cx="166" cy="148" r="2.5" fill="#3E2723" />
+                    {/* Eye highlights */}
+                    <circle cx="147" cy="147" r="1" fill="white" />
+                    <circle cx="167" cy="147" r="1" fill="white" />
+                    {/* Blink animation */}
+                    <ellipse cx="145" cy="148" rx="5" ry="0.5" fill="url(#skinGrad)" opacity={0}>
+                        <animate attributeName="opacity" values="0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0" dur="4s" repeatCount="indefinite" />
+                    </ellipse>
+                    <ellipse cx="165" cy="148" rx="5" ry="0.5" fill="url(#skinGrad)" opacity={0}>
+                        <animate attributeName="opacity" values="0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0" dur="4s" repeatCount="indefinite" />
+                    </ellipse>
+
+                    {/* Nose */}
+                    <path d="M153 152 Q155 158 157 152" stroke="#C4956A" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+
+                    {/* Smile */}
+                    <path d="M143 162 Q155 172 167 162" stroke="#3E2723" strokeWidth="2" fill="none" strokeLinecap="round" />
+                    {/* Smile cheeks */}
+                    <circle cx="138" cy="160" r="5" fill="#E8A88C" opacity={0.2} />
+                    <circle cx="172" cy="160" r="5" fill="#E8A88C" opacity={0.2} />
+
+                    {/* Mustache */}
+                    <path d="M145 160 Q150 156 155 158 Q160 156 165 160" stroke="#3E2723" strokeWidth="2" fill="none" strokeLinecap="round" />
+                </g>
+            </g>
+
+            {/* ── Scanning particles (floating around phone) ── */}
+            <g opacity={0.5}>
+                <circle cx="240" cy="245" r="2" fill="#D4A017">
+                    <animate attributeName="cy" values="245;230;245" dur="2s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0;0.8;0" dur="2s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="248" cy="260" r="1.5" fill="#556B2F">
+                    <animate attributeName="cy" values="260;240;260" dur="2.5s" repeatCount="indefinite" begin="0.5s" />
+                    <animate attributeName="opacity" values="0;0.6;0" dur="2.5s" repeatCount="indefinite" begin="0.5s" />
+                </circle>
+                <circle cx="235" cy="250" r="1.8" fill="#6B8E3D">
+                    <animate attributeName="cy" values="250;235;250" dur="1.8s" repeatCount="indefinite" begin="1s" />
+                    <animate attributeName="opacity" values="0;0.7;0" dur="1.8s" repeatCount="indefinite" begin="1s" />
+                </circle>
+                <circle cx="245" cy="270" r="1.2" fill="#D4A017">
+                    <animate attributeName="cy" values="270;250;270" dur="2.2s" repeatCount="indefinite" begin="0.3s" />
+                    <animate attributeName="opacity" values="0;0.5;0" dur="2.2s" repeatCount="indefinite" begin="0.3s" />
                 </circle>
             </g>
 
-            {/* Leaf in scanning */}
-            <path d="M240 182 Q252 170 248 158 Q244 170 235 175Z" fill="#556B2F" opacity={0.8} />
-            <line x1="243" y1="178" x2="247" y2="165" stroke="#556B2F" strokeWidth="0.8" opacity={0.5} />
+            {/* ── Floating leaves ── */}
+            <g opacity={0.2}>
+                <path d="M40 120 Q35 110 30 105 Q38 108 42 115Z" fill="#556B2F">
+                    <animateTransform attributeName="transform" type="translate" values="0,0;15,30;30,60;45,90" dur="8s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.3;0.2;0.1;0" dur="8s" repeatCount="indefinite" />
+                </path>
+                <path d="M280 80 Q275 70 270 65 Q278 68 282 75Z" fill="#6B8E3D">
+                    <animateTransform attributeName="transform" type="translate" values="0,0;-12,25;-24,50;-36,75" dur="7s" repeatCount="indefinite" begin="2s" />
+                    <animate attributeName="opacity" values="0.3;0.2;0.1;0" dur="7s" repeatCount="indefinite" begin="2s" />
+                </path>
+                <path d="M160 60 Q155 50 150 45 Q158 48 162 55Z" fill="#D4A017">
+                    <animateTransform attributeName="transform" type="translate" values="0,0;8,20;16,40;24,60" dur="9s" repeatCount="indefinite" begin="4s" />
+                    <animate attributeName="opacity" values="0.2;0.15;0.1;0" dur="9s" repeatCount="indefinite" begin="4s" />
+                </path>
+            </g>
+
+            {/* ── AI scanning ring around leaf ── */}
+            <g transform="translate(68, 215)">
+                <circle cx="0" cy="0" r="22" fill="none" stroke="#D4A017" strokeWidth="1.5" strokeDasharray="4,4" opacity={0.4}>
+                    <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="4s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="0" cy="0" r="16" fill="none" stroke="#556B2F" strokeWidth="1" strokeDasharray="2,6" opacity={0.3}>
+                    <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="3s" repeatCount="indefinite" />
+                </circle>
+            </g>
         </svg>
     );
 }
@@ -151,7 +337,7 @@ export default function LoginPage() {
                 <div
                     className="login-illustration"
                     style={{
-                        flex: "0 0 320px",
+                        flex: "0 0 340px",
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
