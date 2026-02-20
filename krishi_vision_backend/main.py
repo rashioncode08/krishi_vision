@@ -234,7 +234,7 @@ async def test_ai_api():
         
         return {
             "status": "success",
-            "model": "gemini-1.5-flash",
+            "model": "gemini-1.5-flash-latest",
             "has_key": bool(GEMINI_API_KEY),
             "response": response.text
         }
