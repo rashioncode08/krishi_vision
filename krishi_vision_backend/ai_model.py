@@ -19,9 +19,9 @@ from io import BytesIO
 _pipeline = None
 
 # HuggingFace Inference API config
-HF_MODEL = "linkanjarad/mobilenet_v2_1.0_224-plant-disease-identification"
-HF_API_URL = f"https://api-inference.huggingface.co/models/{HF_MODEL}"
-HF_TOKEN = os.environ.get("HF_TOKEN", "")  # Optional, works without for public models
+HF_MODEL = "ozair23/mobilenet_v2_1.0_224-finetuned-plantdisease"
+HF_API_URL = f"https://router.huggingface.co/hf-inference/models/{HF_MODEL}"
+HF_TOKEN = os.environ.get("HF_TOKEN", "")  # Required for HF Router API
 
 
 # Map from the HuggingFace model's 38 class labels → our disease_db IDs
@@ -193,10 +193,10 @@ def is_model_available() -> bool:
 
 
 def is_hf_api_available() -> bool:
-    """Check if requests is installed (for HF Inference API)."""
+    """Check if requests is installed and HF_TOKEN is set (required for Router API)."""
     try:
         import requests
-        return True
+        return bool(HF_TOKEN)
     except ImportError:
         return False
 
