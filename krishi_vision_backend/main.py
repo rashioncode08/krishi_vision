@@ -174,10 +174,12 @@ async def predict_disease(file: UploadFile = File(...)):
 
     # Run prediction — AI model (local or HF API) with mock fallback
     model_type = "mock"
+    ai_error = None
     try:
         prediction = ai_predict(image_bytes)
         model_type = "ai"
     except Exception as e:
+        ai_error = str(e)
         print(f"⚠️ AI inference failed, falling back to mock: {e}")
         prediction = mock_predict(image_bytes)
 
@@ -215,7 +217,44 @@ async def predict_disease(file: UploadFile = File(...)):
         },
         "image_info": image_info,
         "model_type": model_type,
+        "ai_error": ai_error,
     }
+
+
+@app.get("/debug/test-hf")
+async def test_hf_api():
+    """Debug endpoint: test HuggingFace Inference API directly."""
+    try:
+        import requests as req
+        # Create a tiny test image (1x1 green pixel)
+        test_img = Image.new("RGB", (224, 224), color=(34, 139, 34))
+        buf = BytesIO()
+        test_img.save(buf, format="JPEG")
+        test_bytes = buf.getvalue()
+
+        from ai_model import HF_API_URL, HF_TOKEN
+        headers = {}
+        if HF_TOKEN:
+            headers["Authorization"] = f"Bearer {HF_TOKEN}"
+
+        response = req.post(
+            HF_API_URL,
+            headers=headers,
+            data=test_bytes,
+            timeout=30,
+        )
+
+        return {
+            "status_code": response.status_code,
+            "hf_api_url": HF_API_URL,
+            "has_token": bool(HF_TOKEN),
+            "response_body": response.json() if response.status_code == 200 else response.text[:500],
+        }
+    except Exception as e:
+        return {
+            "error": str(e),
+            "type": type(e).__name__,
+        }
 
 
 @app.get("/history")
