@@ -36,12 +36,14 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS — allow frontend on localhost:3000
+# CORS — allow frontend origins (local + deployed)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
         "http://127.0.0.1:3000",
+        "https://krishi-vision-51i9.vercel.app",
+        "https://krishi-vision.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
