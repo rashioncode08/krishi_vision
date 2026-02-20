@@ -6,6 +6,7 @@ import HowItWorks from "./components/HowItWorks";
 import ImageUpload from "./components/ImageUpload";
 import LoadingAnalysis from "./components/LoadingAnalysis";
 import ResultsCard from "./components/ResultsCard";
+import ScanHistory from "./components/ScanHistory";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -315,6 +316,12 @@ export default function Home() {
           </div>
         )}
       </section>
+
+      {/* ========== Divider ========== */}
+      <div className="section-divider" />
+
+      {/* ========== Scan History & Stats ========== */}
+      <ScanHistory />
 
       {/* ========== Footer ========== */}
       <footer

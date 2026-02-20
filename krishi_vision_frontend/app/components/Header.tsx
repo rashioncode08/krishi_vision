@@ -67,6 +67,20 @@ export default function Header() {
                 >
                     How It Works
                 </a>
+                <a
+                    href="#scan-history"
+                    style={{
+                        color: "var(--text-muted)",
+                        textDecoration: "none",
+                        fontSize: "0.9rem",
+                        fontWeight: 500,
+                        transition: "color 0.2s",
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text-accent)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
+                >
+                    Scan History
+                </a>
                 <button onClick={scrollToUpload} className="btn-primary" style={{ padding: "10px 24px", fontSize: "0.85rem" }}>
                     Scan a Leaf
                 </button>

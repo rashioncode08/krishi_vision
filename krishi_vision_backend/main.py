@@ -14,6 +14,7 @@ from PIL import Image
 
 from disease_db import DISEASE_DATABASE, get_disease_info
 from database import init_db, save_scan, get_recent_scans, get_disease_stats
+from ai_model import predict_disease as ai_predict, is_model_available
 
 # ---------------------------------------------------------------------------
 # App Setup
@@ -82,32 +83,26 @@ def preprocess_image(image_bytes: bytes) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Mock Inference Engine
+# Inference Engine
 # ---------------------------------------------------------------------------
-# In production, replace this with a real TensorFlow/PyTorch model:
-#   model = tf.keras.models.load_model("plant_disease_model.h5")
-#   predictions = model.predict(preprocessed_image_array)
+# Uses real HuggingFace MobileNetV2 model if available,
+# falls back to mock prediction otherwise.
 # ---------------------------------------------------------------------------
+
+USE_REAL_MODEL = is_model_available()
 
 
 def mock_predict(image_bytes: bytes) -> dict:
     """
-    Simulate AI model inference.
-    Uses a hash of the image to deterministically pick a disease,
-    so the same image always returns the same result.
+    Fallback: simulate AI model inference when real model is unavailable.
+    Uses a hash of the image to deterministically pick a disease.
     """
-    # Create a deterministic seed from the image content
     image_hash = hashlib.md5(image_bytes).hexdigest()
     seed = int(image_hash[:8], 16)
     rng = random.Random(seed)
-
-    # Select a disease based on the image hash
     disease_entry = rng.choice(DISEASE_DATABASE)
-
-    # Generate a confidence score within the disease's typical range
     low, high = disease_entry["confidence_range"]
     confidence = round(rng.uniform(low, high), 4)
-
     return {
         "disease_id": disease_entry["id"],
         "confidence": confidence,
@@ -125,6 +120,7 @@ async def root():
         "status": "healthy",
         "service": "KrishiVision API",
         "version": "1.0.0",
+        "ai_model": "real (MobileNetV2)" if USE_REAL_MODEL else "mock (demo)",
         "message": "Upload a leaf image to /predict to detect crop diseases.",
     }
 
@@ -173,8 +169,17 @@ async def predict_disease(file: UploadFile = File(...)):
     # Preprocess the image
     image_info = preprocess_image(image_bytes)
 
-    # Run prediction (mock inference)
-    prediction = mock_predict(image_bytes)
+    # Run prediction — real AI model with mock fallback
+    model_type = "mock"
+    try:
+        if USE_REAL_MODEL:
+            prediction = ai_predict(image_bytes)
+            model_type = "ai"
+        else:
+            prediction = mock_predict(image_bytes)
+    except Exception as e:
+        print(f"⚠️ AI model failed, falling back to mock: {e}")
+        prediction = mock_predict(image_bytes)
 
     # Fetch disease details
     disease_data = get_disease_info(prediction["disease_id"])
@@ -209,6 +214,7 @@ async def predict_disease(file: UploadFile = File(...)):
             "prevention": disease_data["prevention"],
         },
         "image_info": image_info,
+        "model_type": model_type,
     }
 
 
