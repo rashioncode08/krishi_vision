@@ -1,10 +1,31 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Logo from "./Logo";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-export default function Header() {
-    const scrollToUpload = () => {
-        document.getElementById("upload-section")?.scrollIntoView({ behavior: "smooth" });
+export default function Header({ hideLogin }: { hideLogin?: boolean }) {
+    const router = useRouter();
+    const [mounted, setMounted] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userName, setUserName] = useState("");
+
+    useEffect(() => {
+        setMounted(true);
+        const token = localStorage.getItem("token");
+        const name = localStorage.getItem("user_name");
+        if (token) {
+            setIsLoggedIn(true);
+            setUserName(name || "Farmer");
+        }
+    }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user_name");
+        setIsLoggedIn(false);
+        router.push("/");
     };
 
     return (
@@ -25,7 +46,7 @@ export default function Header() {
                 justifyContent: "space-between",
             }}
         >
-            <a href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
+            <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
                 <Logo size={38} />
                 <div style={{ display: "flex", flexDirection: "column" }}>
                     <span
@@ -51,61 +72,73 @@ export default function Header() {
                         AI Crop Intelligence
                     </span>
                 </div>
-            </a>
+            </Link>
 
             <nav style={{ display: "flex", alignItems: "center", gap: "28px" }}>
-                {[
-                    { href: "#how-it-works", label: "How It Works" },
-                    { href: "#upload-section", label: "Diagnose" },
-                    { href: "#weather", label: "Weather" },
-                    { href: "#scan-history", label: "Dashboard" },
-                ].map((link) => (
-                    <a
-                        key={link.href}
-                        href={link.href}
-                        style={{
-                            color: "#374a3f",
-                            textDecoration: "none",
-                            fontSize: "0.85rem",
-                            fontWeight: 500,
-                            transition: "color 0.2s",
-                        }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = "#16a34a")}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = "#374a3f")}
+                {!isLoggedIn ? (
+                    <>
+                        <a href="/#how-it-works" style={{ color: "#374a3f", textDecoration: "none", fontSize: "0.85rem", fontWeight: 500 }}>How It Works</a>
+                    </>
+                ) : (
+                    <>
+                        <Link href="/dashboard" style={{ color: "#374a3f", textDecoration: "none", fontSize: "0.85rem", fontWeight: 500 }}>Dashboard</Link>
+                        <a href="/dashboard#weather" style={{ color: "#374a3f", textDecoration: "none", fontSize: "0.85rem", fontWeight: 500 }}>Weather</a>
+                        <a href="/dashboard#scan-history" style={{ color: "#374a3f", textDecoration: "none", fontSize: "0.85rem", fontWeight: 500 }}>History</a>
+                    </>
+                )}
+
+                {!hideLogin && mounted && (
+                    <>
+                        {isLoggedIn ? (
+                            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                                <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "#16a34a" }}>
+                                    👋🏼 Namaste, {userName.split(" ")[0]}
+                                </span>
+                                <button
+                                    onClick={handleLogout}
+                                    style={{
+                                        padding: "8px 16px",
+                                        fontSize: "0.75rem",
+                                        fontWeight: 600,
+                                        color: "#ef4444",
+                                        background: "#fef2f2",
+                                        border: "1px solid #fee2e2",
+                                        borderRadius: 50,
+                                        cursor: "pointer",
+                                    }}
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        ) : (
+                            <Link
+                                href="/login"
+                                style={{
+                                    padding: "9px 22px",
+                                    fontSize: "0.82rem",
+                                    fontWeight: 600,
+                                    color: "#16a34a",
+                                    border: "2px solid #16a34a",
+                                    borderRadius: 50,
+                                    textDecoration: "none",
+                                    transition: "all 0.3s ease",
+                                }}
+                            >
+                                🔑 Login
+                            </Link>
+                        )}
+                    </>
+                )}
+
+                {mounted && isLoggedIn && (
+                    <Link
+                        href="/dashboard#upload-section"
+                        className="btn-primary"
+                        style={{ padding: "9px 22px", fontSize: "0.82rem", textDecoration: "none" }}
                     >
-                        {link.label}
-                    </a>
-                ))}
-                <a
-                    href="/login"
-                    style={{
-                        padding: "9px 22px",
-                        fontSize: "0.82rem",
-                        fontWeight: 600,
-                        color: "#16a34a",
-                        border: "2px solid #16a34a",
-                        borderRadius: 50,
-                        textDecoration: "none",
-                        transition: "all 0.3s ease",
-                    }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "#16a34a";
-                        e.currentTarget.style.color = "white";
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.background = "transparent";
-                        e.currentTarget.style.color = "#16a34a";
-                    }}
-                >
-                    🔑 Login
-                </a>
-                <button
-                    onClick={scrollToUpload}
-                    className="btn-primary"
-                    style={{ padding: "9px 22px", fontSize: "0.82rem" }}
-                >
-                    🔬 Scan Leaf
-                </button>
+                        🔬 Scan Leaf
+                    </Link>
+                )}
             </nav>
         </header>
     );

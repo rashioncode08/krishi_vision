@@ -1,69 +1,11 @@
 "use client";
 
-import { useState, useCallback } from "react";
 import Header from "./components/Header";
+import Image from "next/image";
+import Link from "next/link";
 import HowItWorks from "./components/HowItWorks";
-import ImageUpload from "./components/ImageUpload";
-import LoadingAnalysis from "./components/LoadingAnalysis";
-import ResultsCard from "./components/ResultsCard";
-import ScanHistory from "./components/ScanHistory";
-import WeatherDashboard from "./components/WeatherDashboard";
-import { HeroIllustration, LeafScanSVG } from "./components/Illustrations";
 
-const RAW_API_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  (typeof window !== "undefined" && window.location.hostname !== "localhost"
-    ? "https://krishi-vision.vercel.app"
-    : "http://localhost:8000");
-const API_URL = RAW_API_URL.replace(/\/+$/, "");
-
-type AppState = "idle" | "analyzing" | "results" | "error";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type PredictionResult = any;
-
-export default function Home() {
-  const [state, setState] = useState<AppState>("idle");
-  const [preview, setPreview] = useState<string>("");
-  const [result, setResult] = useState<PredictionResult>(null);
-  const [errorMsg, setErrorMsg] = useState("");
-
-  const handleImageSelected = useCallback(async (file: File, previewUrl: string) => {
-    setPreview(previewUrl);
-    setState("analyzing");
-    setErrorMsg("");
-
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const res = await fetch(`${API_URL}/predict`, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({ detail: "Server error" }));
-        throw new Error(err.detail || `Error ${res.status}`);
-      }
-
-      const data = await res.json();
-      await new Promise((r) => setTimeout(r, 2000));
-      setResult(data);
-      setState("results");
-    } catch (err) {
-      setErrorMsg(err instanceof Error ? err.message : "Failed to analyze image. Is the backend running?");
-      setState("error");
-    }
-  }, []);
-
-  const handleReset = useCallback(() => {
-    setState("idle");
-    setPreview("");
-    setResult(null);
-    setErrorMsg("");
-  }, []);
-
+export default function LandingPage() {
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg-secondary)" }}>
       <Header />
@@ -87,17 +29,17 @@ export default function Home() {
         <div
           style={{
             position: "absolute",
-            width: 600,
-            height: 600,
+            width: 800,
+            height: 800,
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(34,197,94,0.06) 0%, transparent 70%)",
-            top: "-10%",
-            right: "-10%",
+            background: "radial-gradient(circle, rgba(34,197,94,0.08) 0%, transparent 70%)",
+            top: "-20%",
+            right: "-20%",
             pointerEvents: "none",
           }}
         />
 
-        <div className="animate-fade-in-up" style={{ maxWidth: 700, position: "relative" }}>
+        <div className="animate-fade-in-up" style={{ maxWidth: 900, position: "relative" }}>
           {/* Badge */}
           <div
             style={{
@@ -108,219 +50,142 @@ export default function Home() {
               background: "#f0fdf4",
               border: "1px solid #dcfce7",
               borderRadius: "9999px",
-              fontSize: "0.8rem",
-              fontWeight: 600,
+              fontSize: "0.85rem",
+              fontWeight: 700,
               color: "#16a34a",
               marginBottom: 28,
             }}
           >
-            🌾 AI-Powered Crop Protection
+            🇮🇳 Built for Indian Farmers • 100% Free AI
           </div>
 
           {/* Heading */}
           <h1
             style={{
-              fontSize: "clamp(2.2rem, 6vw, 4rem)",
+              fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
               fontWeight: 800,
               lineHeight: 1.1,
               letterSpacing: "-0.03em",
-              marginBottom: 20,
+              marginBottom: 24,
               color: "#0f1a14",
             }}
           >
-            Scan a Leaf.
+            Smart Farming Starts with
             <br />
-            <span style={{ color: "#16a34a" }}>Save a Crop.</span>
+            <span style={{ color: "#16a34a" }}>Healthy Crops.</span>
           </h1>
 
           <p
             style={{
-              fontSize: "clamp(1rem, 2.5vw, 1.15rem)",
+              fontSize: "clamp(1rem, 2.5vw, 1.25rem)",
               lineHeight: 1.7,
-              color: "#6b8077",
-              maxWidth: 500,
-              margin: "0 auto 36px",
+              color: "#4b5563",
+              maxWidth: 600,
+              margin: "0 auto 40px",
+              fontWeight: 500
             }}
           >
-            Upload a photo of a diseased leaf and get an instant AI diagnosis
-            with treatment advice — in under a minute.
+            KrishiVision is your AI crop doctor. Upload a photo of a diseased leaf and our Google Gemini AI engine will diagnose the issue and provide modern treatment advice instantly.
           </p>
 
           <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
-            <a href="#upload-section" className="btn-primary" style={{ fontSize: "1.05rem", padding: "16px 36px" }}>
-              🔍 Start Scanning
-            </a>
-            <a href="#how-it-works" className="btn-secondary" style={{ fontSize: "1.05rem", padding: "16px 36px" }}>
-              Learn More
+            <Link href="/login" className="btn-primary" style={{ fontSize: "1.1rem", padding: "18px 40px", boxShadow: "0 10px 25px rgba(22, 163, 74, 0.3)" }}>
+              🌾 Get Started Free
+            </Link>
+            <a href="#how-it-works" className="btn-secondary" style={{ fontSize: "1.1rem", padding: "18px 40px", background: "white" }}>
+              How it works
             </a>
           </div>
 
           {/* Hero Illustration */}
-          <div style={{ marginTop: 48, display: "flex", justifyContent: "center" }}>
-            <HeroIllustration />
-          </div>
+          <div style={{ marginTop: 60, display: "flex", justifyContent: "center", position: "relative" }}>
+            <div style={{
+              position: "relative",
+              width: "100%",
+              maxWidth: 800,
+              aspectRatio: "16/9",
+              borderRadius: 24,
+              overflow: "hidden",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.08)",
+              border: "8px solid white"
+            }}>
+              <Image
+                src="/hero-farmer.png"
+                alt="Happy Indian Farmer Illustration"
+                fill
+                style={{ objectFit: "cover" }}
+                priority
+              />
+            </div>
 
-          {/* Stats */}
-          <div
-            style={{ display: "flex", gap: 48, justifyContent: "center", marginTop: 40, flexWrap: "wrap" }}
-            className="animate-fade-in delay-500"
-          >
-            {[
-              { value: "15+", label: "Diseases Detected" },
-              { value: "<1min", label: "Analysis Time" },
-              { value: "95%+", label: "Accuracy" },
-            ].map((stat) => (
-              <div key={stat.label} style={{ textAlign: "center" }}>
-                <div style={{ fontSize: "2rem", fontWeight: 800, color: "#16a34a", lineHeight: 1 }}>
-                  {stat.value}
-                </div>
-                <div style={{ fontSize: "0.8rem", color: "#6b8077", marginTop: 6, fontWeight: 500 }}>
-                  {stat.label}
-                </div>
+            {/* Floating stats badge */}
+            <div style={{
+              position: "absolute",
+              bottom: -20,
+              right: 20,
+              background: "white",
+              padding: "16px 24px",
+              borderRadius: 16,
+              boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+              display: "flex",
+              alignItems: "center",
+              gap: 16,
+              border: "1px solid #f0fdf4"
+            }} className="animate-fade-in delay-500">
+              <div style={{ fontSize: "2rem", background: "#f0fdf4", width: 48, height: 48, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}>🔬</div>
+              <div style={{ textAlign: "left" }}>
+                <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "#16a34a", lineHeight: 1.2 }}>95%+</div>
+                <div style={{ fontSize: "0.8rem", color: "#6b8077", fontWeight: 600 }}>Diagnosis Accuracy</div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </section>
 
       <div className="section-divider" />
 
-      <HowItWorks />
+      <div id="how-it-works">
+        <HowItWorks />
+      </div>
 
       <div className="section-divider" />
-
-      {/* ========== Upload Section ========== */}
-      <section
-        id="upload-section"
-        style={{
-          padding: "100px 24px 120px",
-          maxWidth: 900,
-          margin: "0 auto",
-        }}
-      >
-        <div style={{ textAlign: "center", marginBottom: 48 }} className="animate-fade-in-up">
-          <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
-            <LeafScanSVG />
-          </div>
-          <p
-            style={{
-              fontSize: "0.8rem",
-              fontWeight: 700,
-              color: "#22c55e",
-              textTransform: "uppercase",
-              letterSpacing: "0.2em",
-              marginBottom: 12,
-            }}
-          >
-            Disease Detection
-          </p>
-          <h2
-            style={{
-              fontSize: "clamp(1.8rem, 4vw, 2.5rem)",
-              fontWeight: 800,
-              color: "#0f1a14",
-              lineHeight: 1.2,
-            }}
-          >
-            Upload Your Leaf Photo
-          </h2>
-        </div>
-
-        {state === "idle" && <ImageUpload onImageSelected={handleImageSelected} />}
-        {state === "analyzing" && <LoadingAnalysis preview={preview} />}
-        {state === "results" && result && (
-          <div className="animate-fade-in">
-            <ResultsCard result={result} />
-            <div style={{ textAlign: "center", marginTop: 32 }}>
-              <button onClick={handleReset} className="btn-primary" style={{ padding: "14px 32px" }}>
-                📸 Scan Another Leaf
-              </button>
-            </div>
-          </div>
-        )}
-        {state === "error" && (
-          <div className="animate-fade-in" style={{ textAlign: "center" }}>
-            <div
-              style={{
-                maxWidth: 500,
-                margin: "0 auto",
-                padding: "32px",
-                background: "white",
-                border: "1px solid #fecaca",
-                borderRadius: 18,
-                boxShadow: "0 4px 16px rgba(239,68,68,0.08)",
-              }}
-            >
-              <div style={{ fontSize: "2.5rem", marginBottom: 16 }}>⚠️</div>
-              <h3 style={{ fontSize: "1.2rem", fontWeight: 700, color: "#0f1a14", marginBottom: 8 }}>
-                Analysis Failed
-              </h3>
-              <p style={{ fontSize: "0.9rem", color: "#6b8077", marginBottom: 24, lineHeight: 1.6 }}>
-                {errorMsg}
-              </p>
-              <button onClick={handleReset} className="btn-primary">Try Again</button>
-            </div>
-          </div>
-        )}
-      </section>
-
-      <div className="section-divider" />
-
-      <WeatherDashboard />
-
-      <div className="section-divider" />
-
-      <ScanHistory />
 
       {/* ========== Footer ========== */}
       <footer
         style={{
-          padding: "48px 24px 32px",
+          padding: "60px 24px 40px",
           borderTop: "1px solid #e2e8e5",
           textAlign: "center",
           background: "white",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 16 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 20 }}>
           <div
             style={{
-              width: 28,
-              height: 28,
+              width: 32,
+              height: 32,
               borderRadius: "50%",
               background: "linear-gradient(135deg, #4ade80, #16a34a)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: "14px",
+              fontSize: "16px",
             }}
           >
             🌿
           </div>
-          <span style={{ fontSize: "1rem", fontWeight: 800, color: "#16a34a" }}>KrishiVision</span>
+          <span style={{ fontSize: "1.2rem", fontWeight: 800, color: "#16a34a" }}>KrishiVision</span>
         </div>
-        <p style={{ fontSize: "0.8rem", color: "#6b8077", marginBottom: 16, lineHeight: 1.6 }}>
-          AI-powered crop disease detection — protecting harvests with technology.
+        <p style={{ fontSize: "0.9rem", color: "#6b8077", marginBottom: 24, lineHeight: 1.6, maxWidth: 400, margin: "0 auto 24px" }}>
+          Empowering Indian farmers with cutting-edge AI crop disease detection and modern agricultural advisory.
         </p>
-        <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", marginBottom: 20 }}>
-          {["Next.js", "FastAPI", "PostgreSQL", "MobileNetV2"].map((tech) => (
-            <span
-              key={tech}
-              style={{
-                fontSize: "0.65rem",
-                padding: "3px 10px",
-                borderRadius: 6,
-                background: "#f0fdf4",
-                color: "#374a3f",
-                border: "1px solid #dcfce7",
-                fontWeight: 500,
-              }}
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
-        <p style={{ fontSize: "0.7rem", color: "#6b8077", opacity: 0.6 }}>
-          © {new Date().getFullYear()} KrishiVision. Built for farmers.
+
+        <Link href="/login" className="btn-primary" style={{ padding: "12px 28px", display: "inline-block", marginBottom: 32 }}>
+          Create Farm Account
+        </Link>
+
+        <p style={{ fontSize: "0.75rem", color: "#6b8077", opacity: 0.6, marginTop: 20 }}>
+          © {new Date().getFullYear()} KrishiVision. Proudly built for India. 🇮🇳
         </p>
       </footer>
     </div>

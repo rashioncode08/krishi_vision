@@ -5,6 +5,9 @@ Pillow==10.4.0
 psycopg2-binary==2.9.9
 python-dotenv==1.0.1
 google-generativeai==0.8.4
+requests==2.32.3
+passlib[bcrypt]==1.7.4
+PyJWT==2.8.0
 # NOTE: torch, torchvision, transformers are NOT included here
 # because they exceed Vercel's 500MB Lambda limit (7GB total).
 # The app uses the Google Gemini API instead (free, lightweight).

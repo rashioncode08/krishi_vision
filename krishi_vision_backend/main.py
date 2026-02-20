@@ -8,12 +8,17 @@ import random
 from io import BytesIO
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, UploadFile, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from pydantic import BaseModel
+from datetime import datetime, timedelta, timezone
+import jwt
+from passlib.context import CryptContext
 from PIL import Image
 
 from disease_db import DISEASE_DATABASE, get_disease_info
-from database import init_db, save_scan, get_recent_scans, get_disease_stats
+from database import init_db, save_scan, get_recent_scans, get_disease_stats, create_user, get_user_by_email
 from ai_model import predict_disease as ai_predict, is_model_available, is_gemini_api_available
 
 # ---------------------------------------------------------------------------
@@ -112,6 +117,71 @@ def mock_predict(image_bytes: bytes) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Authentication
+# ---------------------------------------------------------------------------
+
+SECRET_KEY = os.environ.get("JWT_SECRET", "super-secret-krishivision-key")
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_DAYS = 7
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
+
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
+
+def get_password_hash(password):
+    return pwd_context.hash(password)
+
+def create_access_token(data: dict, expires_delta: timedelta | None = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.now(timezone.utc) + expires_delta
+    else:
+        expire = datetime.now(timezone.utc) + timedelta(days=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+def verify_token(token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            raise HTTPException(status_code=401, detail="Invalid auth token")
+        return email
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+class RegisterRequest(BaseModel):
+    full_name: str
+    email: str
+    password: str
+
+@app.post("/api/auth/register")
+async def register_user(req: RegisterRequest):
+    if get_user_by_email(req.email):
+        raise HTTPException(status_code=400, detail="Email already registered")
+    
+    hashed_pwd = get_password_hash(req.password)
+    try:
+        user_id = create_user(req.full_name, req.email, hashed_pwd)
+        token = create_access_token({"sub": req.email, "id": user_id})
+        return {"success": True, "token": token, "email": req.email, "full_name": req.full_name}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/auth/login")
+async def login_user(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = get_user_by_email(form_data.username)
+    if not user or not verify_password(form_data.password, user["password_hash"]):
+        raise HTTPException(status_code=401, detail="Incorrect email or password")
+    
+    token = create_access_token({"sub": user["email"], "id": user["id"]})
+    return {"access_token": token, "token_type": "bearer", "success": True, "email": user["email"], "full_name": user["full_name"]}
+
+
+# ---------------------------------------------------------------------------
 # API Routes
 # ---------------------------------------------------------------------------
 
@@ -145,7 +215,7 @@ async def list_diseases():
 
 
 @app.post("/predict")
-async def predict_disease(file: UploadFile = File(...)):
+async def predict_disease(file: UploadFile = File(...), current_user: str = Depends(verify_token)):
     """
     Upload a leaf image and get disease prediction.
 
@@ -247,7 +317,7 @@ async def test_ai_api():
 
 
 @app.get("/history")
-async def scan_history(limit: int = 20):
+async def scan_history(limit: int = 20, current_user: str = Depends(verify_token)):
     """Get recent scan history from the database."""
     try:
         scans = get_recent_scans(limit)

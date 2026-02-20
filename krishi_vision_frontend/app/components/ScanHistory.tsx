@@ -35,8 +35,11 @@ export default function ScanHistory() {
     useEffect(() => {
         async function fetchData() {
             try {
+                const token = localStorage.getItem("token");
+                const headers: HeadersInit = token ? { "Authorization": `Bearer ${token}` } : {};
+
                 const [historyRes, statsRes, diseasesRes] = await Promise.all([
-                    fetch(`${API_URL}/history`),
+                    fetch(`${API_URL}/history`, { headers }),
                     fetch(`${API_URL}/stats`),
                     fetch(`${API_URL}/diseases`),
                 ]);

@@ -36,6 +36,16 @@ def init_db():
     """)
 
     cur.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            full_name VARCHAR(255) NOT NULL,
+            email VARCHAR(255) UNIQUE NOT NULL,
+            password_hash VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    """)
+
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS disease_stats (
             id SERIAL PRIMARY KEY,
             disease_id VARCHAR(100) UNIQUE NOT NULL,
@@ -128,3 +138,38 @@ def get_disease_stats():
     conn.close()
 
     return {"total_scans": total["total"], "by_disease": stats}
+
+
+# ---------------------------------------------------------------------------
+# User Authentication Functions
+# ---------------------------------------------------------------------------
+
+def get_user_by_email(email: str):
+    """Fetch a user by their email address."""
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM users WHERE email = %s;", (email,))
+    user = cur.fetchone()
+    cur.close()
+    conn.close()
+    return user
+
+
+def create_user(full_name: str, email: str, password_hash: str):
+    """Create a new user."""
+    conn = get_connection()
+    cur = conn.cursor()
+    try:
+        cur.execute(
+            "INSERT INTO users (full_name, email, password_hash) VALUES (%s, %s, %s) RETURNING id;",
+            (full_name, email, password_hash)
+        )
+        user_id = cur.fetchone()["id"]
+        conn.commit()
+        return user_id
+    except psycopg2.IntegrityError:
+        conn.rollback()
+        raise Exception("Email already exists")
+    finally:
+        cur.close()
+        conn.close()
