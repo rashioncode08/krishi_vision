@@ -326,18 +326,31 @@ export default function Home() {
       {/* ========== Footer ========== */}
       <footer
         style={{
-          padding: "40px 24px",
-          borderTop: "1px solid var(--border-subtle)",
+          padding: "48px 24px 32px",
+          borderTop: "1px solid rgba(255,255,255,0.05)",
           textAlign: "center",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 12 }}>
-          <span style={{ fontSize: "1.2rem" }}>🌿</span>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 16 }}>
+          <div
+            style={{
+              width: 28,
+              height: 28,
+              borderRadius: "50%",
+              background: "linear-gradient(135deg, #4ade80, #16a34a)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "14px",
+            }}
+          >
+            🌿
+          </div>
           <span
             style={{
               fontSize: "1rem",
-              fontWeight: 700,
-              background: "linear-gradient(135deg, var(--kv-green-300), var(--kv-green-500))",
+              fontWeight: 800,
+              background: "linear-gradient(135deg, #4ade80, #22c55e)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
@@ -345,8 +358,29 @@ export default function Home() {
             KrishiVision
           </span>
         </div>
-        <p style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
-          AI-powered crop disease detection. Built for farmers, powered by technology.
+        <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginBottom: 16, lineHeight: 1.6 }}>
+          AI-powered crop disease detection — protecting harvests with technology.
+        </p>
+        <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", marginBottom: 20 }}>
+          {["Next.js", "FastAPI", "PostgreSQL", "MobileNetV2"].map((tech) => (
+            <span
+              key={tech}
+              style={{
+                fontSize: "0.65rem",
+                padding: "3px 10px",
+                borderRadius: 6,
+                background: "rgba(255,255,255,0.04)",
+                color: "var(--text-muted)",
+                border: "1px solid rgba(255,255,255,0.06)",
+                fontWeight: 500,
+              }}
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
+        <p style={{ fontSize: "0.7rem", color: "var(--text-muted)", opacity: 0.5 }}>
+          © {new Date().getFullYear()} KrishiVision. Built for farmers.
         </p>
       </footer>
     </div>
