@@ -379,3 +379,75 @@ def get_disease_info(disease_id: str) -> dict | None:
         if d["id"] == disease_id:
             return d
     return None
+
+
+# ---------------------------------------------------------------------------
+# Seed diseases into PostgreSQL when run directly
+# ---------------------------------------------------------------------------
+
+if __name__ == "__main__":
+    import json
+    from database import get_connection
+
+    print("🌱 Seeding diseases into PostgreSQL...")
+
+    conn = get_connection()
+    cur = conn.cursor()
+
+    # Create diseases table
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS diseases (
+            id SERIAL PRIMARY KEY,
+            disease_id VARCHAR(100) UNIQUE NOT NULL,
+            disease_name VARCHAR(255) NOT NULL,
+            crop VARCHAR(255) NOT NULL,
+            description TEXT NOT NULL,
+            treatment JSONB NOT NULL,
+            prevention JSONB NOT NULL,
+            confidence_low FLOAT,
+            confidence_high FLOAT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    """)
+
+    # Insert each disease
+    inserted = 0
+    skipped = 0
+    for d in DISEASE_DATABASE:
+        try:
+            cur.execute(
+                """
+                INSERT INTO diseases (disease_id, disease_name, crop, description, treatment, prevention, confidence_low, confidence_high)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                ON CONFLICT (disease_id) DO UPDATE SET
+                    disease_name = EXCLUDED.disease_name,
+                    crop = EXCLUDED.crop,
+                    description = EXCLUDED.description,
+                    treatment = EXCLUDED.treatment,
+                    prevention = EXCLUDED.prevention,
+                    confidence_low = EXCLUDED.confidence_low,
+                    confidence_high = EXCLUDED.confidence_high;
+                """,
+                (
+                    d["id"],
+                    d["disease"],
+                    d["crop"],
+                    d["description"],
+                    json.dumps(d["treatment"]),
+                    json.dumps(d["prevention"]),
+                    d["confidence_range"][0],
+                    d["confidence_range"][1],
+                ),
+            )
+            inserted += 1
+            print(f"  ✅ {d['crop']} — {d['disease']}")
+        except Exception as e:
+            skipped += 1
+            print(f"  ❌ {d['crop']} — {d['disease']}: {e}")
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    print(f"\n🎉 Done! {inserted} diseases seeded, {skipped} skipped.")
+    print("   Tables in your Neon DB: diseases, scan_history, disease_stats")

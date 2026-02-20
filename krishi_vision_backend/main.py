@@ -6,21 +6,33 @@ Crop disease detection API with image upload and AI prediction.
 import hashlib
 import random
 from io import BytesIO
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
 
 from disease_db import DISEASE_DATABASE, get_disease_info
+from database import init_db, save_scan, get_recent_scans, get_disease_stats
 
 # ---------------------------------------------------------------------------
 # App Setup
 # ---------------------------------------------------------------------------
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup: initialize database tables
+    try:
+        init_db()
+    except Exception as e:
+        print(f"⚠️ Database init failed (will still work without DB): {e}")
+    yield
+
 app = FastAPI(
     title="KrishiVision API",
     description="AI-powered crop disease detection for farmers",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
 # CORS — allow frontend on localhost:3000
@@ -169,6 +181,19 @@ async def predict_disease(file: UploadFile = File(...)):
     if disease_data is None:
         raise HTTPException(status_code=500, detail="Internal error: disease not found in database.")
 
+    # Save scan to database
+    try:
+        image_size_kb = round(len(image_bytes) / 1024, 2)
+        save_scan(
+            disease_name=disease_data["disease"],
+            crop=disease_data["crop"],
+            confidence=prediction["confidence"],
+            image_filename=file.filename,
+            image_size_kb=image_size_kb,
+        )
+    except Exception as e:
+        print(f"⚠️ Failed to save scan to DB: {e}")
+
     # Build response
     return {
         "success": True,
@@ -185,3 +210,49 @@ async def predict_disease(file: UploadFile = File(...)):
         },
         "image_info": image_info,
     }
+
+
+@app.get("/history")
+async def scan_history(limit: int = 20):
+    """Get recent scan history from the database."""
+    try:
+        scans = get_recent_scans(limit)
+        return {
+            "success": True,
+            "total": len(scans),
+            "scans": [
+                {
+                    "id": s["id"],
+                    "disease": s["disease_name"],
+                    "crop": s["crop"],
+                    "confidence": s["confidence"],
+                    "filename": s["image_filename"],
+                    "scanned_at": str(s["scanned_at"]),
+                }
+                for s in scans
+            ],
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+
+
+@app.get("/stats")
+async def disease_statistics():
+    """Get disease detection statistics."""
+    try:
+        stats = get_disease_stats()
+        return {
+            "success": True,
+            "total_scans": stats["total_scans"],
+            "by_disease": [
+                {
+                    "disease": s["disease_name"],
+                    "crop": s["crop"],
+                    "total_scans": s["total_scans"],
+                    "last_scanned": str(s["last_scanned"]),
+                }
+                for s in stats["by_disease"]
+            ],
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
