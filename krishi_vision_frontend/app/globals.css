@@ -71,7 +71,12 @@ html {
 }
 
 body {
-  font-family: var(--font-geist-sans), "Inter", -apple-system, system-ui, sans-serif;
+  font-family:
+    var(--font-geist-sans),
+    "Inter",
+    -apple-system,
+    system-ui,
+    sans-serif;
   background: var(--bg-secondary);
   color: var(--text-primary);
   line-height: 1.6;
@@ -154,6 +159,8 @@ body {
   border: 2px dashed var(--kv-green-200);
   border-radius: var(--radius-xl);
   background: var(--kv-green-50);
+  padding: 14px;
+  margin: 5px 0;
   transition: all 0.3s ease;
   cursor: pointer;
 }
@@ -236,7 +243,6 @@ body {
 }
 
 @keyframes float {
-
   0%,
   100% {
     transform: translateY(0);
@@ -248,7 +254,6 @@ body {
 }
 
 @keyframes pulse-glow {
-
   0%,
   100% {
     opacity: 1;
@@ -294,7 +299,12 @@ body {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, transparent, var(--kv-green-400), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--kv-green-400),
+    transparent
+  );
   box-shadow: 0 0 12px var(--kv-green-400);
   animation: scan-line 2s linear infinite;
   z-index: 10;

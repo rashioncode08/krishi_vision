@@ -51,19 +51,6 @@ export default function Header() {
                     >
                         KrishiVision
                     </span>
-                    {!isMobile && (
-                        <span
-                            style={{
-                                fontSize: "0.55rem",
-                                fontWeight: 600,
-                                color: "#6b8077",
-                                letterSpacing: "0.12em",
-                                textTransform: "uppercase",
-                            }}
-                        >
-                            AI Crop Intelligence
-                        </span>
-                    )}
                 </div>
             </a>
 

@@ -105,6 +105,7 @@ export default function ImageUpload({ onImageSelected, disabled }: ImageUploadPr
                         fontWeight: 700,
                         color: "var(--text-primary)",
                         marginBottom: 8,
+                        padding: "0 16px",
                     }}
                 >
                     {isDragOver ? "Drop your image here!" : "Drag & drop a leaf photo"}
@@ -115,6 +116,7 @@ export default function ImageUpload({ onImageSelected, disabled }: ImageUploadPr
                         fontSize: "0.9rem",
                         color: "var(--text-muted)",
                         marginBottom: 24,
+                        padding: "0 16px",
                     }}
                 >
                     or click to browse — supports JPG, PNG, WEBP (max 10 MB)
@@ -126,6 +128,7 @@ export default function ImageUpload({ onImageSelected, disabled }: ImageUploadPr
                         gap: 12,
                         justifyContent: "center",
                         flexWrap: "wrap",
+                        padding: "0 16px",
                     }}
                 >
                     <button
