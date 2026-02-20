@@ -14,7 +14,7 @@ from PIL import Image
 
 from disease_db import DISEASE_DATABASE, get_disease_info
 from database import init_db, save_scan, get_recent_scans, get_disease_stats
-from ai_model import predict_disease as ai_predict, is_model_available, is_hf_api_available
+from ai_model import predict_disease as ai_predict, is_model_available, is_gemini_api_available
 
 # ---------------------------------------------------------------------------
 # App Setup
@@ -91,7 +91,7 @@ def preprocess_image(image_bytes: bytes) -> dict:
 # falls back to mock prediction otherwise.
 # ---------------------------------------------------------------------------
 
-USE_REAL_MODEL = is_model_available() or is_hf_api_available()
+USE_REAL_MODEL = is_model_available() or is_gemini_api_available()
 
 
 def mock_predict(image_bytes: bytes) -> dict:
@@ -118,7 +118,7 @@ def mock_predict(image_bytes: bytes) -> dict:
 @app.get("/")
 async def root():
     """Health check endpoint."""
-    model_label = "real (MobileNetV2)" if is_model_available() else ("huggingface-api (MobileNetV2)" if is_hf_api_available() else "mock (demo)")
+    model_label = "real (Local HF)" if is_model_available() else ("gemini-1.5-flash" if is_gemini_api_available() else "mock (demo)")
     return {
         "status": "healthy",
         "service": "KrishiVision API",
@@ -221,34 +221,22 @@ async def predict_disease(file: UploadFile = File(...)):
     }
 
 
-@app.get("/debug/test-hf")
-async def test_hf_api():
-    """Debug endpoint: test HuggingFace Inference API directly."""
+@app.get("/debug/test-ai")
+async def test_ai_api():
+    """Debug endpoint: test Gemini API directly."""
     try:
-        import requests as req
-        # Create a tiny test image (1x1 green pixel)
-        test_img = Image.new("RGB", (224, 224), color=(34, 139, 34))
-        buf = BytesIO()
-        test_img.save(buf, format="JPEG")
-        test_bytes = buf.getvalue()
-
-        from ai_model import HF_API_URL, HF_TOKEN
-        headers = {}
-        if HF_TOKEN:
-            headers["Authorization"] = f"Bearer {HF_TOKEN}"
-
-        response = req.post(
-            HF_API_URL,
-            headers=headers,
-            data=test_bytes,
-            timeout=30,
-        )
-
+        from ai_model import is_gemini_api_available, get_gemini_client, GEMINI_API_KEY
+        if not is_gemini_api_available():
+             return {"status": "error", "message": "Gemini API dependencies or key missing", "has_key": bool(GEMINI_API_KEY)}
+             
+        model = get_gemini_client()
+        response = model.generate_content("Hello! Are you working?")
+        
         return {
-            "status_code": response.status_code,
-            "hf_api_url": HF_API_URL,
-            "has_token": bool(HF_TOKEN),
-            "response_body": response.json() if response.status_code == 200 else response.text[:500],
+            "status": "success",
+            "model": "gemini-1.5-flash",
+            "has_key": bool(GEMINI_API_KEY),
+            "response": response.text
         }
     except Exception as e:
         return {

@@ -1,30 +1,26 @@
 """
 KrishiVision — AI Model Module
-Uses the HuggingFace Inference API for plant disease classification.
-Model: linkanjarad/mobilenet_v2_1.0_224-plant-disease-identification
-Accuracy: ~95.4% on PlantVillage dataset (38 classes)
+Uses the Google Gemini API (gemini-1.5-flash) for plant disease classification.
+Accuracy: Excellent at identifying diseases from images.
 
 Two modes:
-1. HuggingFace Inference API (works on Vercel — no torch needed)
+1. Gemini API (lightweight, highly accurate, works on Vercel)
 2. Local model (if torch + transformers are installed)
 """
 
 import os
-import base64
 import json
+import base64
 from PIL import Image
 from io import BytesIO
 
 # Optional: for local inference
 _pipeline = None
 
-# HuggingFace Inference API config
-HF_MODEL = "ozair23/mobilenet_v2_1.0_224-finetuned-plantdisease"
-HF_API_URL = f"https://router.huggingface.co/hf-inference/models/{HF_MODEL}"
-HF_TOKEN = os.environ.get("HF_TOKEN", "")  # Required for HF Router API
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 
-
-# Map from the HuggingFace model's 38 class labels → our disease_db IDs
+# We keep the old HF mapping for local inference if still used, but Gemini will
+# output our native `disease_id` format directly based on the prompt.
 LABEL_TO_DISEASE_ID = {
     "Tomato___Late_blight": "tomato_late_blight",
     "Tomato___Early_blight": "tomato_early_blight",
@@ -69,64 +65,81 @@ LABEL_TO_DISEASE_ID = {
 
 
 # -------------------------------------------------------------------
-# HuggingFace Inference API (works on Vercel — lightweight)
+# Google Gemini API
 # -------------------------------------------------------------------
 
-def predict_disease_hf_api(image_bytes: bytes) -> dict:
+def get_gemini_client():
+    import google.generativeai as genai
+    genai.configure(api_key=GEMINI_API_KEY)
+    
+    # We specify JSON output format to ensure we easily parse it
+    model = genai.GenerativeModel("gemini-1.5-flash", generation_config={"response_mime_type": "application/json"})
+    return model
+
+def predict_disease_gemini(image_bytes: bytes) -> dict:
     """
-    Call the HuggingFace Inference API for plant disease classification.
-    This is lightweight — no torch/transformers needed.
+    Call the Google Gemini API to analyze the plant image.
+    Outputs JSON matching our required format.
     """
-    import requests
+    if not GEMINI_API_KEY:
+        raise Exception("GEMINI_API_KEY is not set.")
 
-    headers = {}
-    if HF_TOKEN:
-        headers["Authorization"] = f"Bearer {HF_TOKEN}"
+    import google.generativeai as genai
+    model = get_gemini_client()
+    
+    img = Image.open(BytesIO(image_bytes))
+    if img.mode != "RGB":
+        img = img.convert("RGB")
 
-    # Send raw image bytes to the API
-    response = requests.post(
-        HF_API_URL,
-        headers=headers,
-        data=image_bytes,
-        timeout=30,
-    )
+    prompt = """
+    You are an expert plant pathologist AI. Analyze the uploaded leaf image for diseases.
+    You MUST output valid JSON only.
 
-    if response.status_code == 503:
-        # Model is loading — wait and retry
-        import time
-        print("⏳ HF model is loading, waiting 10s and retrying...")
-        time.sleep(10)
-        response = requests.post(
-            HF_API_URL,
-            headers=headers,
-            data=image_bytes,
-            timeout=60,
-        )
+    Important: You must classify the image into ONE of the following exact `disease_id` strings:
+    tomato_late_blight, tomato_early_blight, tomato_bacterial_spot, tomato_yellow_leaf_curl,
+    potato_early_blight, potato_late_blight, apple_scab, apple_black_rot,
+    corn_common_rust, corn_northern_leaf_blight, grape_black_rot, rice_brown_spot,
+    wheat_leaf_rust, citrus_greening, or healthy_leaf.
 
-    if response.status_code != 200:
-        raise Exception(f"HF API error {response.status_code}: {response.text}")
+    If the image is not a plant leaf, or is a healthy leaf, use "healthy_leaf".
+    If it's a disease not exactly on the list but very similar (e.g. powder mildew), pick the closest match.
 
-    results = response.json()
-
-    if isinstance(results, dict) and "error" in results:
-        raise Exception(f"HF API error: {results['error']}")
-
-    # Results: [{"label": "...", "score": 0.xx}, ...]
-    top = results[0]
-    label = top["label"]
-    confidence = round(top["score"], 4)
-
-    disease_id = LABEL_TO_DISEASE_ID.get(label, "healthy_leaf")
-
-    return {
-        "disease_id": disease_id,
-        "confidence": confidence,
-        "raw_label": label,
-        "all_predictions": [
-            {"label": r["label"], "confidence": round(r["score"], 4)}
-            for r in results[:5]
-        ],
+    Return JSON strictly in this format:
+    {
+        "disease_id": "one_of_the_exact_strings_above",
+        "confidence": 0.95,
+        "raw_label": "A short English name of what you saw"
     }
+    """
+
+    try:
+        response = model.generate_content([prompt, img])
+        result = json.loads(response.text.strip())
+        
+        disease_id = result.get("disease_id", "healthy_leaf")
+        confidence = float(result.get("confidence", 0.92))
+        raw_label = result.get("raw_label", disease_id)
+
+        # Basic validation against our allowed IDs
+        valid_ids = [
+            "tomato_late_blight", "tomato_early_blight", "tomato_bacterial_spot", "tomato_yellow_leaf_curl",
+            "potato_early_blight", "potato_late_blight", "apple_scab", "apple_black_rot",
+            "corn_common_rust", "corn_northern_leaf_blight", "grape_black_rot", "rice_brown_spot",
+            "wheat_leaf_rust", "citrus_greening", "healthy_leaf"
+        ]
+        if disease_id not in valid_ids:
+            disease_id = "healthy_leaf"
+
+        return {
+            "disease_id": disease_id,
+            "confidence": confidence,
+            "raw_label": raw_label,
+            "all_predictions": [
+                {"label": raw_label, "confidence": confidence}
+            ]
+        }
+    except Exception as e:
+        raise Exception(f"Gemini API Error: {str(e)}")
 
 
 # -------------------------------------------------------------------
@@ -142,7 +155,7 @@ def get_model():
             from transformers import pipeline
             _pipeline = pipeline(
                 "image-classification",
-                model=HF_MODEL,
+                model="ozair23/mobilenet_v2_1.0_224-finetuned-plantdisease",
                 top_k=5,
             )
             print("✅ AI model loaded successfully!")
@@ -153,7 +166,7 @@ def get_model():
 
 
 def predict_disease_local(image_bytes: bytes) -> dict:
-    """Run local AI inference on a leaf image."""
+    """Run local AI inference on a leaf image using HuggingFace."""
     img = Image.open(BytesIO(image_bytes))
     if img.mode != "RGB":
         img = img.convert("RGB")
@@ -192,11 +205,11 @@ def is_model_available() -> bool:
         return False
 
 
-def is_hf_api_available() -> bool:
-    """Check if requests is installed and HF_TOKEN is set (required for Router API)."""
+def is_gemini_api_available() -> bool:
+    """Check if google.generativeai is installed and GEMINI_API_KEY is set."""
     try:
-        import requests
-        return bool(HF_TOKEN)
+        import google.generativeai
+        return bool(GEMINI_API_KEY)
     except ImportError:
         return False
 
@@ -204,18 +217,18 @@ def is_hf_api_available() -> bool:
 def predict_disease(image_bytes: bytes) -> dict:
     """
     Main prediction function — auto-selects the best available method:
-    1. Local model (if torch + transformers installed)
-    2. HuggingFace Inference API (lightweight, works on Vercel)
+    1. Local HF model (if torch + transformers installed)
+    2. Google Gemini API (lightweight, highly accurate, works on Vercel)
     """
-    # Try local model first
+    # Try local model first (optional, useful for edge/offline)
     if is_model_available():
         try:
             return predict_disease_local(image_bytes)
         except Exception as e:
             print(f"⚠️ Local model failed: {e}")
 
-    # Fall back to HuggingFace Inference API
-    if is_hf_api_available():
-        return predict_disease_hf_api(image_bytes)
+    # Fall back to Gemini API
+    if is_gemini_api_available():
+        return predict_disease_gemini(image_bytes)
 
-    raise Exception("No prediction method available")
+    raise Exception("No active prediction method available. Please provide GEMINI_API_KEY.")

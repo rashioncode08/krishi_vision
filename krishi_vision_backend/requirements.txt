@@ -4,8 +4,8 @@ python-multipart==0.0.9
 Pillow==10.4.0
 psycopg2-binary==2.9.9
 python-dotenv==1.0.1
-requests==2.32.3
+google-generativeai==0.8.4
 # NOTE: torch, torchvision, transformers are NOT included here
 # because they exceed Vercel's 500MB Lambda limit (7GB total).
-# The app uses the HuggingFace Inference API instead (free, lightweight).
+# The app uses the Google Gemini API instead (free, lightweight).
 # To use local model, install: pip install transformers torch torchvision
