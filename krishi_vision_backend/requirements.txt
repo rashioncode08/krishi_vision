@@ -4,6 +4,8 @@ python-multipart==0.0.9
 Pillow==10.4.0
 psycopg2-binary==2.9.9
 python-dotenv==1.0.1
-transformers>=4.40.0
-torch>=2.0.0
-torchvision>=0.15.0
+# NOTE: torch, torchvision, transformers are NOT included here
+# because they exceed Vercel's 500MB Lambda limit (7GB total).
+# Install them locally for real AI inference:
+#   py -m pip install transformers torch torchvision
+# On Vercel, the app auto-falls back to the mock prediction engine.
