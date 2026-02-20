@@ -118,11 +118,12 @@ def mock_predict(image_bytes: bytes) -> dict:
 @app.get("/")
 async def root():
     """Health check endpoint."""
+    model_label = "real (MobileNetV2)" if is_model_available() else ("huggingface-api (MobileNetV2)" if is_hf_api_available() else "mock (demo)")
     return {
         "status": "healthy",
         "service": "KrishiVision API",
         "version": "1.0.0",
-        "ai_model": "real (MobileNetV2)" if USE_REAL_MODEL else "mock (demo)",
+        "ai_model": model_label,
         "message": "Upload a leaf image to /predict to detect crop diseases.",
     }
 
