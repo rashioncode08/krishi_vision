@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 
-const API_URL =
+const RAW_API_URL =
     process.env.NEXT_PUBLIC_API_URL ||
     (typeof window !== "undefined" && window.location.hostname !== "localhost"
         ? "https://krishi-vision.vercel.app"
         : "http://localhost:8000");
+const API_URL = RAW_API_URL.replace(/\/+$/, "");
 
 interface Scan {
     id: number;
