@@ -9,7 +9,11 @@ import ResultsCard from "./components/ResultsCard";
 import ScanHistory from "./components/ScanHistory";
 import { HeroIllustration, LeafScanSVG } from "./components/Illustrations";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  (typeof window !== "undefined" && window.location.hostname !== "localhost"
+    ? "https://krishi-vision.vercel.app"
+    : "http://localhost:8000");
 
 type AppState = "idle" | "analyzing" | "results" | "error";
 
