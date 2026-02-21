@@ -56,7 +56,7 @@ export default function LandingPage() {
               marginBottom: 28,
             }}
           >
-            🇮🇳 Built for Indian Farmers • 100% Free AI
+            IN Built for Indian Farmers • 100% Free AI
           </div>
 
           {/* Heading */}

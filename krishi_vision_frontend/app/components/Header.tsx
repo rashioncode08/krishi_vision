@@ -11,6 +11,7 @@ export default function Header({ hideLogin }: { hideLogin?: boolean }) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userName, setUserName] = useState("");
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
         setMounted(true);
@@ -20,6 +21,22 @@ export default function Header({ hideLogin }: { hideLogin?: boolean }) {
             setIsLoggedIn(true);
             setUserName(name || "Farmer");
         }
+
+        const mq = window.matchMedia("(max-width: 768px)");
+        const handler = (e: MediaQueryListEvent | MediaQueryList) => setIsMobile(e.matches);
+        handler(mq); // set initial value
+        if (mq.addEventListener) {
+            mq.addEventListener("change", handler as EventListener);
+        } else {
+            mq.addListener(handler as (e: MediaQueryListEvent) => void);
+        }
+        return () => {
+            if (mq.removeEventListener) {
+                mq.removeEventListener("change", handler as EventListener);
+            } else {
+                mq.removeListener(handler as (e: MediaQueryListEvent) => void);
+            }
+        };
     }, []);
 
     const handleLogout = () => {
@@ -29,6 +46,24 @@ export default function Header({ hideLogin }: { hideLogin?: boolean }) {
         router.push("/");
     };
 
+    const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
+        <Link
+            href={href}
+            onClick={() => setIsMobileMenuOpen(false)}
+            style={{
+                color: "#374a3f",
+                textDecoration: "none",
+                fontSize: "0.85rem",
+                fontWeight: 500,
+                transition: "color 0.2s",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#16a34a")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "#374a3f")}
+        >
+            {children}
+        </Link>
+    );
+
     return (
         <header
             style={{
@@ -37,7 +72,7 @@ export default function Header({ hideLogin }: { hideLogin?: boolean }) {
                 left: 0,
                 right: 0,
                 zIndex: 50,
-                padding: "12px 32px",
+                padding: isMobile ? "10px 16px" : "12px 32px",
                 background: "rgba(255, 255, 255, 0.9)",
                 backdropFilter: "blur(20px)",
                 WebkitBackdropFilter: "blur(20px)",
@@ -47,12 +82,13 @@ export default function Header({ hideLogin }: { hideLogin?: boolean }) {
                 justifyContent: "space-between",
             }}
         >
+            {/* ---- Left: Logo ---- */}
             <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
-                <Logo size={38} />
+                <Logo size={isMobile ? 32 : 38} />
                 <div style={{ display: "flex", flexDirection: "column" }}>
                     <span
                         style={{
-                            fontSize: "1.15rem",
+                            fontSize: isMobile ? "1rem" : "1.15rem",
                             fontWeight: 800,
                             color: "#16a34a",
                             letterSpacing: "-0.02em",
@@ -61,61 +97,55 @@ export default function Header({ hideLogin }: { hideLogin?: boolean }) {
                     >
                         KrishiVision
                     </span>
-                    <span
-                        style={{
-                            fontSize: "0.55rem",
-                            fontWeight: 600,
-                            color: "#6b8077",
-                            letterSpacing: "0.12em",
-                            textTransform: "uppercase",
-                        }}
-                    >
-                        AI Crop Intelligence
-                    </span>
                 </div>
             </Link>
 
-            {/* Mobile Hamburger Icon */}
-            <button
-                className="md:hidden flex items-center justify-center p-2 rounded-lg"
-                style={{ color: "#15803d", display: "none" }}
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-                {isMobileMenuOpen ? "✖" : "☰"}
-            </button>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex" style={{ display: "flex", alignItems: "center", gap: "28px" }}>
-                {!isLoggedIn ? (
+            {/* ---- Right: Nav ---- */}
+            <nav style={{ display: "flex", alignItems: "center", gap: isMobile ? "12px" : "28px" }}>
+                {/* Nav links — hidden on mobile */}
+                {!isMobile && (
                     <>
-                        <a href="/#how-it-works" style={{ color: "#374a3f", textDecoration: "none", fontSize: "0.85rem", fontWeight: 500 }}>How It Works</a>
-                    </>
-                ) : (
-                    <>
-                        <Link href="/dashboard" style={{ color: "#374a3f", textDecoration: "none", fontSize: "0.85rem", fontWeight: 500 }}>Dashboard</Link>
-                        <a href="/dashboard#weather" style={{ color: "#374a3f", textDecoration: "none", fontSize: "0.85rem", fontWeight: 500 }}>Weather</a>
-                        <a href="/dashboard#scan-history" style={{ color: "#374a3f", textDecoration: "none", fontSize: "0.85rem", fontWeight: 500 }}>History</a>
+                        {!isLoggedIn ? (
+                            <NavLink href="/#how-it-works">How It Works</NavLink>
+                        ) : (
+                            <>
+                                <NavLink href="/dashboard">Dashboard</NavLink>
+                                <NavLink href="/dashboard#weather">Weather</NavLink>
+                                <NavLink href="/dashboard#scan-history">History</NavLink>
+                            </>
+                        )}
                     </>
                 )}
 
                 {!hideLogin && mounted && (
                     <>
                         {isLoggedIn ? (
-                            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                                <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "#15803d" }}>
-                                    👋🏼 Namaste, {userName.split(" ")[0]}
-                                </span>
+                            <div style={{ display: "flex", alignItems: "center", gap: isMobile ? "8px" : "16px" }}>
+                                {!isMobile && (
+                                    <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "#16a34a" }}>
+                                        👋🏼 Namaste, {userName.split(" ")[0]}
+                                    </span>
+                                )}
                                 <button
                                     onClick={handleLogout}
                                     style={{
-                                        padding: "8px 16px",
-                                        fontSize: "0.75rem",
+                                        padding: isMobile ? "7px 16px" : "9px 22px",
+                                        fontSize: isMobile ? "0.78rem" : "0.82rem",
                                         fontWeight: 600,
                                         color: "#ef4444",
-                                        background: "#fef2f2",
-                                        border: "1px solid #fee2e2",
+                                        background: "transparent",
+                                        border: "2px solid #ef4444",
                                         borderRadius: 50,
                                         cursor: "pointer",
+                                        transition: "all 0.3s ease",
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.background = "#ef4444";
+                                        e.currentTarget.style.color = "white";
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.background = "transparent";
+                                        e.currentTarget.style.color = "#ef4444";
                                     }}
                                 >
                                     Logout
@@ -125,23 +155,32 @@ export default function Header({ hideLogin }: { hideLogin?: boolean }) {
                             <Link
                                 href="/login"
                                 style={{
-                                    padding: "9px 22px",
-                                    fontSize: "0.82rem",
+                                    padding: isMobile ? "7px 16px" : "9px 22px",
+                                    fontSize: isMobile ? "0.78rem" : "0.82rem",
                                     fontWeight: 600,
-                                    color: "#15803d",
-                                    border: "2px solid #15803d",
+                                    color: "#16a34a",
+                                    border: "2px solid #16a34a",
                                     borderRadius: 50,
                                     textDecoration: "none",
                                     transition: "all 0.3s ease",
                                 }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.background = "#16a34a";
+                                    e.currentTarget.style.color = "white";
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.background = "transparent";
+                                    e.currentTarget.style.color = "#16a34a";
+                                }}
                             >
-                                🔑 Login
+                                Login
                             </Link>
                         )}
                     </>
                 )}
 
-                {mounted && isLoggedIn && (
+                {/* Scan Leaf button — hidden on mobile */}
+                {!isMobile && mounted && isLoggedIn && (
                     <Link
                         href="/dashboard#upload-section"
                         className="btn-primary"
@@ -150,10 +189,30 @@ export default function Header({ hideLogin }: { hideLogin?: boolean }) {
                         🔬 Scan Leaf
                     </Link>
                 )}
+
+                {/* Mobile Menu Toggle - Only if logged in or mobile menu is needed */}
+                {isMobile && (
+                    <button
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            padding: "6px",
+                            color: "#16a34a",
+                            background: "transparent",
+                            border: "none",
+                            fontSize: "1.5rem",
+                            cursor: "pointer",
+                        }}
+                    >
+                        {isMobileMenuOpen ? "✖" : "☰"}
+                    </button>
+                )}
             </nav>
 
             {/* Mobile Navigation Dropdown */}
-            {isMobileMenuOpen && (
+            {isMobileMenuOpen && isMobile && (
                 <div style={{
                     position: "absolute",
                     top: "100%",
@@ -168,38 +227,12 @@ export default function Header({ hideLogin }: { hideLogin?: boolean }) {
                     boxShadow: "0 10px 20px rgba(0,0,0,0.05)"
                 }}>
                     {!isLoggedIn ? (
-                        <a href="/#how-it-works" onClick={() => setIsMobileMenuOpen(false)} style={{ color: "#374a3f", textDecoration: "none", fontSize: "1rem", fontWeight: 600, padding: "8px 0", borderBottom: "1px solid #f0fdf4" }}>How It Works</a>
+                        <Link href="/#how-it-works" onClick={() => setIsMobileMenuOpen(false)} style={{ color: "#374a3f", textDecoration: "none", fontSize: "1rem", fontWeight: 600, padding: "8px 0", borderBottom: "1px solid #f0fdf4" }}>How It Works</Link>
                     ) : (
                         <>
                             <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)} style={{ color: "#374a3f", textDecoration: "none", fontSize: "1rem", fontWeight: 600, padding: "8px 0", borderBottom: "1px solid #f0fdf4" }}>Dashboard</Link>
-                            <a href="/dashboard#weather" onClick={() => setIsMobileMenuOpen(false)} style={{ color: "#374a3f", textDecoration: "none", fontSize: "1rem", fontWeight: 600, padding: "8px 0", borderBottom: "1px solid #f0fdf4" }}>Weather</a>
-                            <a href="/dashboard#scan-history" onClick={() => setIsMobileMenuOpen(false)} style={{ color: "#374a3f", textDecoration: "none", fontSize: "1rem", fontWeight: 600, padding: "8px 0", borderBottom: "1px solid #f0fdf4" }}>History</a>
-                        </>
-                    )}
-
-                    {!hideLogin && mounted && (
-                        <>
-                            {isLoggedIn ? (
-                                <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: "8px 0" }}>
-                                    <span style={{ fontSize: "0.95rem", fontWeight: 600, color: "#15803d" }}>
-                                        👋🏼 Namaste, {userName.split(" ")[0]}
-                                    </span>
-                                    <button
-                                        onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}
-                                        style={{ padding: "10px", fontSize: "0.85rem", fontWeight: 700, color: "#ef4444", background: "#fef2f2", border: "1px solid #fee2e2", borderRadius: 8, cursor: "pointer", width: "100%" }}
-                                    >
-                                        Logout
-                                    </button>
-                                </div>
-                            ) : (
-                                <Link
-                                    href="/login"
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    style={{ padding: "12px", fontSize: "0.95rem", fontWeight: 700, color: "#15803d", background: "#f0fdf4", borderRadius: 8, textAlign: "center", textDecoration: "none" }}
-                                >
-                                    🔑 Login
-                                </Link>
-                            )}
+                            <Link href="/dashboard#weather" onClick={() => setIsMobileMenuOpen(false)} style={{ color: "#374a3f", textDecoration: "none", fontSize: "1rem", fontWeight: 600, padding: "8px 0", borderBottom: "1px solid #f0fdf4" }}>Weather</Link>
+                            <Link href="/dashboard#scan-history" onClick={() => setIsMobileMenuOpen(false)} style={{ color: "#374a3f", textDecoration: "none", fontSize: "1rem", fontWeight: 600, padding: "8px 0", borderBottom: "1px solid #f0fdf4" }}>History</Link>
                         </>
                     )}
 
@@ -208,10 +241,16 @@ export default function Header({ hideLogin }: { hideLogin?: boolean }) {
                             href="/dashboard#upload-section"
                             onClick={() => setIsMobileMenuOpen(false)}
                             className="btn-primary"
-                            style={{ width: "100%", justifyContent: "center", padding: "14px", fontSize: "1rem" }}
+                            style={{ display: "flex", width: "100%", justifyContent: "center", padding: "14px", fontSize: "1rem", textAlign: "center", textDecoration: "none" }}
                         >
-                            🔬 Scan Leaf
+                            � Scan Leaf
                         </Link>
+                    )}
+
+                    {mounted && isLoggedIn && (
+                        <div style={{ fontSize: "0.95rem", fontWeight: 600, color: "#16a34a", padding: "8px 0" }}>
+                            �🏼 Namaste, {userName.split(" ")[0]}
+                        </div>
                     )}
                 </div>
             )}
