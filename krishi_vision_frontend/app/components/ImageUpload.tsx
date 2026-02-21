@@ -136,7 +136,7 @@ export default function ImageUpload({ onImageSelected, disabled }: ImageUploadPr
                         }}
                         style={{ fontSize: "0.9rem", padding: "12px 28px" }}
                     >
-                        📁 Browse Files
+                        Browse Files
                     </button>
                     <button
                         className="btn-secondary"
@@ -146,7 +146,7 @@ export default function ImageUpload({ onImageSelected, disabled }: ImageUploadPr
                         }}
                         style={{ fontSize: "0.9rem", padding: "12px 28px" }}
                     >
-                        📷 Use Camera
+                        Use Camera
                     </button>
                 </div>
             </div>

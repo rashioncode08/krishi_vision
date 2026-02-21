@@ -238,7 +238,7 @@ export default function WeatherDashboard() {
                         textTransform: "uppercase", letterSpacing: "0.2em", marginBottom: 12,
                     }}
                 >
-                    🌦️ Farm Weather
+                    Farm Weather
                 </p>
                 <h2 style={{ fontSize: "clamp(1.8rem, 4vw, 2.5rem)", fontWeight: 800, lineHeight: 1.2, color: "#0f1a14", marginBottom: 8 }}>
                     Weather Intelligence
@@ -321,7 +321,7 @@ export default function WeatherDashboard() {
                             justifyContent: "center",
                         }}
                     >
-                        <div style={{ fontSize: "2rem", marginBottom: 8 }}>🌧️</div>
+                        <div style={{ fontSize: "2rem", marginBottom: 8 }}></div>
                         <div style={{ fontSize: "0.9rem", fontWeight: 700, color: "#1d4ed8", marginBottom: 4 }}>
                             Rain Alert
                         </div>
@@ -362,7 +362,7 @@ export default function WeatherDashboard() {
             >
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
                     <div>
-                        <span style={{ fontSize: "0.9rem", fontWeight: 700, color: "#0f1a14" }}>📈 24-Hour Temperature</span>
+                        <span style={{ fontSize: "0.9rem", fontWeight: 700, color: "#0f1a14" }}>24-Hour Temperature</span>
                         <span style={{ fontSize: "0.72rem", color: "#6b8077", marginLeft: 8 }}>Today</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -376,8 +376,7 @@ export default function WeatherDashboard() {
             {/* 7-Day Forecast */}
             <div className="animate-fade-in-up delay-400">
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-                    <span style={{ fontSize: "0.9rem", fontWeight: 700, color: "#0f1a14" }}>📅 7-Day Forecast</span>
-                    <span style={{ fontSize: "0.7rem", color: "#6b8077" }}>Open-Meteo API</span>
+                    <span style={{ fontSize: "0.9rem", fontWeight: 700, color: "#0f1a14" }}>7-Day Forecast</span>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))", gap: 12 }}>
                     {forecast.slice(0, 7).map((day, i) => {
@@ -456,27 +455,6 @@ export default function WeatherDashboard() {
                 </div>
             </div>
 
-            {/* API indicator */}
-            <div
-                style={{
-                    marginTop: 24,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 8,
-                    fontSize: "0.7rem",
-                    color: "#6b8077",
-                    opacity: 0.6,
-                }}
-            >
-                <div
-                    style={{
-                        width: 6, height: 6, borderRadius: "50%", background: "#22c55e",
-                        boxShadow: "0 0 8px rgba(34,197,94,0.4)", animation: "pulse-glow 2s ease-in-out infinite",
-                    }}
-                />
-                Open-Meteo API • Auto-refreshing • Free & Open Source
-            </div>
         </section>
     );
 }

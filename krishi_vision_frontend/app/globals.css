@@ -6,19 +6,17 @@
 @import "tailwindcss";
 
 :root {
-  /* Core palette — deep premium greens */
+  /* Core palette — bright greens */
   --kv-green-50: #f0fdf4;
   --kv-green-100: #dcfce7;
   --kv-green-200: #bbf7d0;
   --kv-green-300: #86efac;
   --kv-green-400: #4ade80;
   --kv-green-500: #22c55e;
-  --kv-green-600: #15803d;
-  /* Deeper primary green */
-  --kv-green-700: #166534;
-  /* Darker accent */
-  --kv-green-800: #14532d;
-  --kv-green-900: #052e16;
+  --kv-green-600: #16a34a;
+  --kv-green-700: #15803d;
+  --kv-green-800: #166534;
+  --kv-green-900: #14532d;
 
   /* Earth / accent */
   --kv-earth-100: #fef9c3;
@@ -73,20 +71,17 @@ html {
 }
 
 body {
-  font-family: var(--font-geist-sans), "Inter", -apple-system, system-ui, sans-serif;
+  font-family:
+    var(--font-geist-sans),
+    "Inter",
+    -apple-system,
+    system-ui,
+    sans-serif;
   background: var(--bg-secondary);
   color: var(--text-primary);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
-}
-
-/* Base mobile typography adjustments */
-@media (max-width: 768px) {
-  html {
-    font-size: 14px;
-    /* Scale down rem values on mobile */
-  }
 }
 
 /* ============================================================
@@ -164,6 +159,8 @@ body {
   border: 2px dashed var(--kv-green-200);
   border-radius: var(--radius-xl);
   background: var(--kv-green-50);
+  padding: 14px;
+  margin: 5px 0;
   transition: all 0.3s ease;
   cursor: pointer;
 }
@@ -304,7 +301,10 @@ body {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, transparent, var(--kv-green-400), transparent);
+  background: linear-gradient(90deg,
+      transparent,
+      var(--kv-green-400),
+      transparent);
   box-shadow: 0 0 12px var(--kv-green-400);
   animation: scan-line 2s linear infinite;
   z-index: 10;

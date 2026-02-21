@@ -78,9 +78,9 @@ export default function ScanHistory() {
     }
 
     const tabs = [
-        { key: "history" as const, label: "Recent Scans", icon: "📋", count: scans.length },
-        { key: "stats" as const, label: "Analytics", icon: "📊", count: stats?.by_disease.length || 0 },
-        { key: "diseases" as const, label: "Disease Library", icon: "🦠", count: diseases.length },
+        { key: "history" as const, label: "Recent Scans", icon: "", count: scans.length },
+        { key: "stats" as const, label: "Analytics", icon: "", count: stats?.by_disease.length || 0 },
+        { key: "diseases" as const, label: "Disease Library", icon: "", count: diseases.length },
     ];
 
     return (
@@ -88,7 +88,7 @@ export default function ScanHistory() {
             {/* Section header */}
             <div style={{ textAlign: "center", marginBottom: 48 }} className="animate-fade-in-up">
                 <p style={{ fontSize: "0.8rem", fontWeight: 700, color: "#22c55e", textTransform: "uppercase", letterSpacing: "0.2em", marginBottom: 12 }}>
-                    📡 Live Database
+                    Live Database
                 </p>
                 <h2 style={{ fontSize: "clamp(1.8rem, 4vw, 2.5rem)", fontWeight: 800, lineHeight: 1.2, color: "#0f1a14", marginBottom: 8 }}>
                     Scan Dashboard
@@ -101,10 +101,10 @@ export default function ScanHistory() {
             {/* Stat cards */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 16, marginBottom: 32 }} className="animate-fade-in-up">
                 {[
-                    { value: stats?.total_scans || 0, label: "Total Scans", icon: "🔬", color: "#16a34a" },
-                    { value: stats?.by_disease.length || 0, label: "Diseases Found", icon: "🧬", color: "#eab308" },
-                    { value: diseases.length, label: "In Disease Library", icon: "📚", color: "#3b82f6" },
-                    { value: stats?.by_disease?.[0]?.disease || "—", label: "Most Detected", icon: "⚡", color: "#f97316" },
+                    { value: stats?.total_scans || 0, label: "Total Scans", icon: "", color: "#16a34a" },
+                    { value: stats?.by_disease.length || 0, label: "Diseases Found", icon: "", color: "#eab308" },
+                    { value: diseases.length, label: "In Disease Library", icon: "", color: "#3b82f6" },
+                    { value: stats?.by_disease?.[0]?.disease || "—", label: "Most Detected", icon: "", color: "#f97316" },
                 ].map((card, i) => (
                     <div
                         key={i}
@@ -173,7 +173,7 @@ export default function ScanHistory() {
             {activeTab === "history" && (
                 <div className="animate-fade-in" style={{ background: "white", border: "1px solid #e2e8e5", borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
                     <div style={{ padding: "14px 20px", borderBottom: "1px solid #e2e8e5", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                        <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#0f1a14" }}>🗄️ scan_history table</span>
+                        <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#0f1a14" }}>scan_history table</span>
                         <span style={{ fontSize: "0.7rem", padding: "3px 10px", borderRadius: 20, background: "#f0fdf4", color: "#16a34a", fontWeight: 600, border: "1px solid #dcfce7" }}>
                             PostgreSQL • Live
                         </span>
@@ -191,7 +191,7 @@ export default function ScanHistory() {
                         <tbody>
                             {scans.length === 0 ? (
                                 <tr><td colSpan={5} style={{ padding: 48, textAlign: "center", color: "#6b8077", fontSize: "0.85rem" }}>
-                                    <div style={{ fontSize: "2rem", marginBottom: 12 }}>🔍</div>No scans yet — upload a leaf to see results here
+                                    <div style={{ fontSize: "2rem", marginBottom: 12 }}></div>No scans yet — upload a leaf to see results here
                                 </td></tr>
                             ) : (
                                 scans.map((scan) => (
@@ -228,12 +228,12 @@ export default function ScanHistory() {
             {activeTab === "stats" && stats && (
                 <div className="animate-fade-in" style={{ display: "flex", flexDirection: "column", gap: 2, background: "white", border: "1px solid #e2e8e5", borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
                     <div style={{ padding: "14px 20px", borderBottom: "1px solid #e2e8e5", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                        <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#0f1a14" }}>📈 disease_stats table</span>
+                        <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#0f1a14" }}>disease_stats table</span>
                         <span style={{ fontSize: "0.7rem", padding: "3px 10px", borderRadius: 20, background: "#fef9c3", color: "#a16207", fontWeight: 600 }}>Aggregated</span>
                     </div>
                     {stats.by_disease.length === 0 ? (
                         <div style={{ padding: 48, textAlign: "center", color: "#6b8077" }}>
-                            <div style={{ fontSize: "2rem", marginBottom: 12 }}>📊</div>No analytics data yet — run some scans!
+                            <div style={{ fontSize: "2rem", marginBottom: 12 }}></div>No analytics data yet — run some scans!
                         </div>
                     ) : (
                         stats.by_disease.map((d, i) => (
@@ -261,7 +261,7 @@ export default function ScanHistory() {
             {activeTab === "diseases" && (
                 <div className="animate-fade-in" style={{ background: "white", border: "1px solid #e2e8e5", borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
                     <div style={{ padding: "14px 20px", borderBottom: "1px solid #e2e8e5", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                        <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#0f1a14" }}>🦠 diseases table</span>
+                        <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#0f1a14" }}>diseases table</span>
                         <span style={{ fontSize: "0.7rem", padding: "3px 10px", borderRadius: 20, background: "#dbeafe", color: "#1d4ed8", fontWeight: 600 }}>{diseases.length} records</span>
                     </div>
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gap: 1, background: "#e2e8e5" }}>
